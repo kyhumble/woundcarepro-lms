@@ -47,36 +47,36 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import Dashboard from './pages/Dashboard';
-import Modules from './pages/Modules';
-import ModuleDetail from './pages/ModuleDetail';
-import QuizPage from './pages/QuizPage';
+import AdminPanel from './pages/AdminPanel';
 import CaseStudies from './pages/CaseStudies';
 import CaseStudyDetail from './pages/CaseStudyDetail';
-import SkillsChecklists from './pages/SkillsChecklists';
-import ChecklistDetail from './pages/ChecklistDetail';
-import ResourceLibrary from './pages/ResourceLibrary';
-import Discussions from './pages/Discussions';
-import Progress from './pages/Progress';
 import Certificates from './pages/Certificates';
-import AdminPanel from './pages/AdminPanel';
+import ChecklistDetail from './pages/ChecklistDetail';
+import Dashboard from './pages/Dashboard';
+import Discussions from './pages/Discussions';
+import ModuleDetail from './pages/ModuleDetail';
+import Modules from './pages/Modules';
+import Progress from './pages/Progress';
+import QuizPage from './pages/QuizPage';
+import ResourceLibrary from './pages/ResourceLibrary';
+import SkillsChecklists from './pages/SkillsChecklists';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Dashboard": Dashboard,
-    "Modules": Modules,
-    "ModuleDetail": ModuleDetail,
-    "QuizPage": QuizPage,
+    "AdminPanel": AdminPanel,
     "CaseStudies": CaseStudies,
     "CaseStudyDetail": CaseStudyDetail,
-    "SkillsChecklists": SkillsChecklists,
-    "ChecklistDetail": ChecklistDetail,
-    "ResourceLibrary": ResourceLibrary,
-    "Discussions": Discussions,
-    "Progress": Progress,
     "Certificates": Certificates,
-    "AdminPanel": AdminPanel,
+    "ChecklistDetail": ChecklistDetail,
+    "Dashboard": Dashboard,
+    "Discussions": Discussions,
+    "ModuleDetail": ModuleDetail,
+    "Modules": Modules,
+    "Progress": Progress,
+    "QuizPage": QuizPage,
+    "ResourceLibrary": ResourceLibrary,
+    "SkillsChecklists": SkillsChecklists,
 }
 
 export const pagesConfig = {

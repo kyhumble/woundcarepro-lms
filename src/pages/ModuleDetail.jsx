@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReactMarkdown from "react-markdown";
+import VideoPlayer from "../components/lesson/VideoPlayer";
 
 export default function ModuleDetail() {
   const params = new URLSearchParams(window.location.search);
@@ -233,14 +234,11 @@ export default function ModuleDetail() {
             >
               {/* Video */}
               {activeLesson.content_type === "video" && activeLesson.video_url && (
-                <div className="aspect-video bg-slate-900 flex items-center justify-center">
-                  <iframe
-                    src={activeLesson.video_url}
-                    className="w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
+                <VideoPlayer
+                  src={activeLesson.video_url}
+                  onComplete={() => completeLessonMutation.mutate(activeLesson.id)}
+                  isCompleted={completedLessonIds.includes(activeLesson.id)}
+                />
               )}
 
               <div className="p-6 lg:p-8">
