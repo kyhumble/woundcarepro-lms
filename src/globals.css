@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display&display=swap');
+
+:root {
+  --navy-950: #020617;
+  --navy-900: #0F172A;
+  --navy-800: #1E293B;
+  --navy-700: #334155;
+  --navy-600: #475569;
+  --teal-600: #0D9488;
+  --teal-500: #14B8A6;
+  --teal-400: #2DD4BF;
+  --gold-500: #D97706;
+  --gold-400: #F59E0B;
+}
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3 {
+  font-family: 'DM Serif Display', serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Smooth transitions */
+.transition-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Quiz answer animation */
+.answer-correct {
+  animation: correctPulse 0.5s ease-out;
+}
+.answer-incorrect {
+  animation: incorrectShake 0.4s ease-out;
+}
+
+@keyframes correctPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@keyframes incorrectShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* Progress bar gradient */
+.progress-gradient {
+  background: linear-gradient(90deg, #0D9488, #14B8A6, #2DD4BF);
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
