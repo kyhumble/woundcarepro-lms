@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 const NAV_ITEMS = [
   { label: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
   { label: "Modules", icon: BookOpen, page: "Modules" },
+  { label: "Mock Exams", icon: GraduationCap, page: "MockExams" },
   { label: "Case Studies", icon: FileText, page: "CaseStudies" },
   { label: "Skills Checklists", icon: ClipboardCheck, page: "SkillsChecklists" },
   { label: "Resource Library", icon: Library, page: "ResourceLibrary" },

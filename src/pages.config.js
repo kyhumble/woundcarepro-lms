@@ -60,6 +60,8 @@ import Progress from './pages/Progress';
 import QuizPage from './pages/QuizPage';
 import ResourceLibrary from './pages/ResourceLibrary';
 import SkillsChecklists from './pages/SkillsChecklists';
+import MockExams from './pages/MockExams';
+import MockExamDetail from './pages/MockExamDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -77,6 +79,8 @@ export const PAGES = {
     "QuizPage": QuizPage,
     "ResourceLibrary": ResourceLibrary,
     "SkillsChecklists": SkillsChecklists,
+    "MockExams": MockExams,
+    "MockExamDetail": MockExamDetail,
 }
 
 export const pagesConfig = {
