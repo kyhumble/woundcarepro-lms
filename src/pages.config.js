@@ -53,6 +53,13 @@ import ModuleDetail from './pages/ModuleDetail';
 import QuizPage from './pages/QuizPage';
 import CaseStudies from './pages/CaseStudies';
 import CaseStudyDetail from './pages/CaseStudyDetail';
+import SkillsChecklists from './pages/SkillsChecklists';
+import ChecklistDetail from './pages/ChecklistDetail';
+import ResourceLibrary from './pages/ResourceLibrary';
+import Discussions from './pages/Discussions';
+import Progress from './pages/Progress';
+import Certificates from './pages/Certificates';
+import AdminPanel from './pages/AdminPanel';
 import __Layout from './Layout.jsx';
 
 
@@ -63,6 +70,13 @@ export const PAGES = {
     "QuizPage": QuizPage,
     "CaseStudies": CaseStudies,
     "CaseStudyDetail": CaseStudyDetail,
+    "SkillsChecklists": SkillsChecklists,
+    "ChecklistDetail": ChecklistDetail,
+    "ResourceLibrary": ResourceLibrary,
+    "Discussions": Discussions,
+    "Progress": Progress,
+    "Certificates": Certificates,
+    "AdminPanel": AdminPanel,
 }
 
 export const pagesConfig = {
