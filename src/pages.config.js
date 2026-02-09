@@ -62,6 +62,7 @@ import ResourceLibrary from './pages/ResourceLibrary';
 import SkillsChecklists from './pages/SkillsChecklists';
 import MockExams from './pages/MockExams';
 import MockExamDetail from './pages/MockExamDetail';
+import Leaderboard from './pages/Leaderboard';
 import __Layout from './Layout.jsx';
 
 
@@ -81,6 +82,7 @@ export const PAGES = {
     "SkillsChecklists": SkillsChecklists,
     "MockExams": MockExams,
     "MockExamDetail": MockExamDetail,
+    "Leaderboard": Leaderboard,
 }
 
 export const pagesConfig = {

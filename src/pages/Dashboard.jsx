@@ -13,6 +13,9 @@ import StatsCard from "../components/dashboard/StatsCard";
 import ModuleProgressCard from "../components/dashboard/ModuleProgressCard";
 import AccreditationTracker from "../components/dashboard/AccreditationTracker";
 import AchievementBadge from "../components/dashboard/AchievementBadge";
+import StreakWidget from "../components/gamification/StreakWidget";
+import PointsWidget from "../components/gamification/PointsWidget";
+import BadgeShowcase from "../components/gamification/BadgeShowcase";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -56,6 +59,16 @@ export default function Dashboard() {
   const { data: announcements = [] } = useQuery({
     queryKey: ["announcements"],
     queryFn: () => base44.entities.Announcement.filter({ is_active: true }, "-created_date", 3),
+  });
+
+  const { data: gamification } = useQuery({
+    queryKey: ["user-gamification"],
+    queryFn: async () => {
+      if (!user?.email) return null;
+      const data = await base44.entities.UserGamification.filter({ user_email: user.email });
+      return data[0] || { total_points: 0, current_streak: 0, longest_streak: 0, level: 1, badges_earned: [] };
+    },
+    enabled: !!user?.email,
   });
 
   // Calculate stats
@@ -103,6 +116,18 @@ export default function Dashboard() {
           icon={Target}
           color="rose"
           index={3}
+        />
+      </div>
+
+      {/* Gamification Widgets */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <StreakWidget 
+          currentStreak={gamification?.current_streak || 0}
+          longestStreak={gamification?.longest_streak || 0}
+        />
+        <PointsWidget 
+          totalPoints={gamification?.total_points || 0}
+          level={gamification?.level || 1}
         />
       </div>
 
@@ -162,24 +187,8 @@ export default function Dashboard() {
 
         {/* Right Column */}
         <div className="space-y-6">
-          {/* Achievements */}
-          <div className="bg-white rounded-2xl border border-slate-200/60 p-6">
-            <h3 className="text-lg font-bold text-slate-800 mb-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              Achievements
-            </h3>
-            {achievements.length > 0 ? (
-              <div className="flex flex-wrap gap-4">
-                {achievements.map((a) => (
-                  <AchievementBadge key={a.id} achievement={a} size="sm" />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-6">
-                <Award className="w-10 h-10 mx-auto text-slate-200 mb-2" />
-                <p className="text-xs text-slate-400">Complete modules to earn badges</p>
-              </div>
-            )}
-          </div>
+          {/* Badge Showcase */}
+          <BadgeShowcase earnedBadges={gamification?.badges_earned || []} />
 
           {/* Accreditation Tracker */}
           <AccreditationTracker

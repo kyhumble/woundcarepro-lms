@@ -6,7 +6,7 @@ import {
   LayoutDashboard, BookOpen, Award, FileText, Library,
   MessageSquare, Settings, ChevronLeft, ChevronRight,
   Bell, LogOut, Menu, X, GraduationCap, ClipboardCheck,
-  BarChart3, User, Shield
+  BarChart3, User, Shield, Trophy
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -27,6 +27,7 @@ const NAV_ITEMS = [
   { label: "Skills Checklists", icon: ClipboardCheck, page: "SkillsChecklists" },
   { label: "Resource Library", icon: Library, page: "ResourceLibrary" },
   { label: "Discussions", icon: MessageSquare, page: "Discussions" },
+  { label: "Leaderboard", icon: Trophy, page: "Leaderboard" },
   { label: "My Progress", icon: BarChart3, page: "Progress" },
   { label: "Certificates", icon: Award, page: "Certificates" },
 ];
