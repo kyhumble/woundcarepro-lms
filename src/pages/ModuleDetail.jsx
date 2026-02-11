@@ -81,6 +81,28 @@ export default function ModuleDetail() {
         completed_at: new Date().toISOString(),
         time_spent_minutes: 15,
       }),
+    onMutate: async (lessonId) => {
+      await queryClient.cancelQueries({ queryKey: ["progress", moduleId] });
+      const previous = queryClient.getQueryData(["progress", moduleId]);
+      
+      queryClient.setQueryData(["progress", moduleId], (old = []) => [
+        ...old,
+        {
+          id: `temp-${Date.now()}`,
+          user_email: user.email,
+          module_id: moduleId,
+          lesson_id: lessonId,
+          progress_type: "lesson_complete",
+          completed_at: new Date().toISOString(),
+          time_spent_minutes: 15,
+        }
+      ]);
+      
+      return { previous };
+    },
+    onError: (err, lessonId, context) => {
+      queryClient.setQueryData(["progress", moduleId], context.previous);
+    },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["progress", moduleId] }),
   });
 

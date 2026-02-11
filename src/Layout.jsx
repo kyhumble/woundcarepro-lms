@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "./utils";
 import { base44 } from "@/api/base44Client";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   LayoutDashboard, BookOpen, Award, FileText, Library,
   MessageSquare, Settings, ChevronLeft, ChevronRight,
@@ -42,10 +43,26 @@ export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [tabHistory, setTabHistory] = useState(() => {
+    const saved = localStorage.getItem('tab_history');
+    return saved ? JSON.parse(saved) : {};
+  });
+  const location = useLocation();
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('tab_history', JSON.stringify(tabHistory));
+  }, [tabHistory]);
+
+  useEffect(() => {
+    setTabHistory(prev => ({
+      ...prev,
+      [currentPageName]: location.pathname + location.search
+    }));
+  }, [currentPageName, location]);
 
   const fullscreenPages = ["Login"];
   if (fullscreenPages.includes(currentPageName)) {
@@ -219,7 +236,17 @@ export default function Layout({ children, currentPageName }) {
 
         {/* Page Content */}
         <main className="p-4 lg:p-8 pb-24 lg:pb-8">
-          {children}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentPageName}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
         </main>
 
         {/* Mobile Bottom Tab Bar */}

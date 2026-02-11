@@ -89,6 +89,20 @@ export default function StudyPlanner() {
 
   const createGoalMutation = useMutation({
     mutationFn: (goalData) => base44.entities.StudyPlan.create({ ...goalData, user_email: user.email }),
+    onMutate: async (newGoalData) => {
+      await queryClient.cancelQueries({ queryKey: ["study-plans"] });
+      const previous = queryClient.getQueryData(["study-plans"]);
+      
+      queryClient.setQueryData(["study-plans"], (old = []) => [
+        ...old,
+        { ...newGoalData, id: `temp-${Date.now()}`, user_email: user.email, status: "active", progress_percentage: 0, created_date: new Date().toISOString() }
+      ]);
+      
+      return { previous };
+    },
+    onError: (err, newGoal, context) => {
+      queryClient.setQueryData(["study-plans"], context.previous);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["study-plans"] });
       setShowGoalDialog(false);
@@ -117,6 +131,19 @@ export default function StudyPlanner() {
 
   const updateSessionMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.StudySession.update(id, data),
+    onMutate: async ({ id, data }) => {
+      await queryClient.cancelQueries({ queryKey: ["study-sessions"] });
+      const previous = queryClient.getQueryData(["study-sessions"]);
+      
+      queryClient.setQueryData(["study-sessions"], (old = []) =>
+        old.map(session => session.id === id ? { ...session, ...data } : session)
+      );
+      
+      return { previous };
+    },
+    onError: (err, variables, context) => {
+      queryClient.setQueryData(["study-sessions"], context.previous);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["study-sessions"] });
     },

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import PullToRefresh from "../components/PullToRefresh";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
@@ -33,13 +34,18 @@ const typeColors = {
 
 export default function ResourceLibrary() {
   const [user, setUser] = useState(null);
+  const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [difficultyFilter, setDifficultyFilter] = useState("all");
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
-  const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all");
-  const [difficultyFilter, setDifficultyFilter] = useState("all");
+
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["resources"] });
+  };
 
   const { data: resources = [] } = useQuery({
     queryKey: ["resources"],
@@ -55,7 +61,8 @@ export default function ResourceLibrary() {
   });
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="max-w-5xl mx-auto">
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-start justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-800 mb-1">Resource Library</h1>
@@ -157,5 +164,6 @@ export default function ResourceLibrary() {
         </div>
       )}
     </div>
+    </PullToRefresh>
   );
 }

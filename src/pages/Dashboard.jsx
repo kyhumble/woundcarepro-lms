@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import PullToRefresh from "../components/PullToRefresh";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
@@ -19,10 +20,22 @@ import BadgeShowcase from "../components/gamification/BadgeShowcase";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
+
+  const handleRefresh = async () => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ["modules"] }),
+      queryClient.invalidateQueries({ queryKey: ["user-progress"] }),
+      queryClient.invalidateQueries({ queryKey: ["achievements"] }),
+      queryClient.invalidateQueries({ queryKey: ["certificates"] }),
+      queryClient.invalidateQueries({ queryKey: ["announcements"] }),
+      queryClient.invalidateQueries({ queryKey: ["user-gamification"] }),
+    ]);
+  };
 
   const { data: modules = [] } = useQuery({
     queryKey: ["modules"],
@@ -82,7 +95,8 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="max-w-7xl mx-auto space-y-8">
       {/* Welcome Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -242,5 +256,6 @@ export default function Dashboard() {
         </div>
       </div>
     </div>
+    </PullToRefresh>
   );
 }

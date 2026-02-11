@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import PullToRefresh from "../components/PullToRefresh";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
@@ -15,10 +16,19 @@ import { Progress } from "@/components/ui/progress";
 export default function Modules() {
   const [user, setUser] = useState(null);
   const [search, setSearch] = useState("");
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
+
+  const handleRefresh = async () => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ["modules"] }),
+      queryClient.invalidateQueries({ queryKey: ["user-progress-modules"] }),
+      queryClient.invalidateQueries({ queryKey: ["all-lessons"] }),
+    ]);
+  };
 
   const { data: modules = [], isLoading } = useQuery({
     queryKey: ["modules"],
@@ -57,7 +67,8 @@ export default function Modules() {
     : 0;
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="max-w-6xl mx-auto">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -184,5 +195,6 @@ export default function Modules() {
         )}
       </div>
     </div>
+    </PullToRefresh>
   );
 }
