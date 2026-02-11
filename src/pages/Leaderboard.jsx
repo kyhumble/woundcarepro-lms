@@ -74,6 +74,9 @@ export default function Leaderboard() {
           <TabsTrigger value="points" className="gap-2">
             <TrendingUp className="w-4 h-4" /> Points
           </TabsTrigger>
+          <TabsTrigger value="mastery" className="gap-2">
+            <Trophy className="w-4 h-4" /> Mastery
+          </TabsTrigger>
           <TabsTrigger value="streaks" className="gap-2">
             <Flame className="w-4 h-4" /> Streaks
           </TabsTrigger>
@@ -120,6 +123,52 @@ export default function Leaderboard() {
                     <div className="text-right">
                       <p className="text-lg font-bold text-teal-600">{item.total_points?.toLocaleString() || 0}</p>
                       <p className="text-xs text-slate-400">points</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Mastery Points Leaderboard */}
+        <TabsContent value="mastery">
+          <Card className="rounded-2xl border-slate-200/60">
+            <CardHeader>
+              <CardTitle className="text-lg">Top by Mastery Points</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {[...gamificationData].sort((a, b) => (b.mastery_points || 0) - (a.mastery_points || 0)).slice(0, 10).map((item, index) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className={`flex items-center gap-4 p-3 rounded-xl ${
+                      item.user_email === user?.email ? "bg-amber-50 border border-amber-200" : "bg-slate-50"
+                    }`}
+                  >
+                    <div className="w-8 flex items-center justify-center">
+                      {getRankIcon(index)}
+                    </div>
+                    <Avatar className="w-10 h-10">
+                      <AvatarFallback className="bg-slate-200 text-slate-700 text-xs">
+                        {getInitials(getUserName(item.user_email))}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <p className="font-semibold text-sm text-slate-800">
+                        {getUserName(item.user_email)}
+                        {item.user_email === user?.email && (
+                          <Badge className="ml-2 bg-amber-100 text-amber-700 text-xs">You</Badge>
+                        )}
+                      </p>
+                      <p className="text-xs text-slate-500">{item.module_mastery_count || 0} modules mastered</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-bold text-amber-600">{item.mastery_points?.toLocaleString() || 0}</p>
+                      <p className="text-xs text-slate-400">mastery points</p>
                     </div>
                   </motion.div>
                 ))}

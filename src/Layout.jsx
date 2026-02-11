@@ -30,6 +30,7 @@ const NAV_ITEMS = [
   { label: "Skills Checklists", icon: ClipboardCheck, page: "SkillsChecklists" },
   { label: "Resource Library", icon: Library, page: "ResourceLibrary" },
   { label: "Discussions", icon: MessageSquare, page: "Discussions" },
+  { label: "Skill Mastery", icon: Trophy, page: "SkillMastery" },
   { label: "Leaderboard", icon: Trophy, page: "Leaderboard" },
   { label: "My Progress", icon: BarChart3, page: "Progress" },
   { label: "Certificates", icon: Award, page: "Certificates" },
