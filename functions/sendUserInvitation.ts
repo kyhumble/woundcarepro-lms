@@ -15,7 +15,9 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Email is required' }, { status: 400 });
     }
 
-    const appUrl = Deno.env.get('APP_URL') || 'https://your-app.base44.com';
+    // Get the app URL from the request origin
+    const origin = req.headers.get('origin') || req.headers.get('referer');
+    const appUrl = origin ? new URL(origin).origin : `https://${req.headers.get('host')}`;
     const roleLabel = role === 'admin' ? 'Administrator' : 'Student';
 
     const emailBody = `
