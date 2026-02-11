@@ -221,6 +221,20 @@ export default function ModuleDetail() {
                   </Button>
                 </Link>
               )}
+              {resources.length > 0 && (
+                <>
+                  <div className="pt-2 pb-1">
+                    <p className="text-xs font-semibold text-slate-600">Resources</p>
+                  </div>
+                  {resources.map((resource) => (
+                    <Link key={resource.id} to={createPageUrl(`ResourceDetail?id=${resource.id}`)}>
+                      <Button size="sm" variant="ghost" className="w-full gap-2 text-xs justify-start">
+                        <Download className="w-3.5 h-3.5" /> {resource.title}
+                      </Button>
+                    </Link>
+                  ))}
+                </>
+              )}
             </div>
           </div>
         </div>
