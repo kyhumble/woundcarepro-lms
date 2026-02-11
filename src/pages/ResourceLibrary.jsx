@@ -118,7 +118,8 @@ export default function ResourceLibrary() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
-                className="bg-white rounded-2xl border border-slate-200/60 p-5 hover:shadow-lg hover:border-teal-200 transition-smooth group cursor-pointer"
+                whileHover={{ y: -4 }}
+                className="bg-white rounded-2xl border border-slate-200/60 p-5 hover:shadow-xl hover:border-teal-200 transition-all group cursor-pointer"
               >
               <div className="flex items-start gap-4">
                 <div className={`w-11 h-11 rounded-xl ${color} flex items-center justify-center flex-shrink-0`}>

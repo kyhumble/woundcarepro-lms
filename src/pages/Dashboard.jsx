@@ -83,6 +83,20 @@ export default function Dashboard() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
+      {/* Welcome Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative bg-gradient-to-br from-teal-600 via-teal-700 to-teal-800 rounded-2xl p-8 text-white overflow-hidden shadow-xl"
+      >
+        <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-teal-400/20 rounded-full blur-3xl"></div>
+        <div className="relative z-10">
+          <h2 className="text-3xl font-bold mb-2">Welcome back, {user?.full_name?.split(" ")[0] || "Learner"}!</h2>
+          <p className="text-teal-50 text-lg">Continue your wound care certification journey</p>
+        </div>
+      </motion.div>
+
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatsCard
@@ -198,28 +212,33 @@ export default function Dashboard() {
           />
 
           {/* Quick Actions */}
-          <div className="bg-white rounded-2xl border border-slate-200/60 p-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white rounded-2xl border border-slate-200/60 p-6 shadow-sm hover:shadow-md transition-shadow"
+          >
             <h3 className="text-lg font-bold text-slate-800 mb-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Quick Actions
             </h3>
             <div className="space-y-2">
-              <Link to={createPageUrl("Modules")}>
-                <Button variant="outline" className="w-full justify-start gap-2 text-sm">
-                  <BookOpen className="w-4 h-4" /> Continue Learning
+              <Link to={createPageUrl("LearningPaths")}>
+                <Button variant="outline" className="w-full justify-start gap-2 text-sm hover:bg-teal-50 hover:border-teal-300 transition-colors">
+                  <BookOpen className="w-4 h-4" /> Learning Paths
                 </Button>
               </Link>
               <Link to={createPageUrl("CaseStudies")}>
-                <Button variant="outline" className="w-full justify-start gap-2 text-sm">
+                <Button variant="outline" className="w-full justify-start gap-2 text-sm hover:bg-teal-50 hover:border-teal-300 transition-colors">
                   <Target className="w-4 h-4" /> Practice Case Studies
                 </Button>
               </Link>
               <Link to={createPageUrl("ResourceLibrary")}>
-                <Button variant="outline" className="w-full justify-start gap-2 text-sm">
+                <Button variant="outline" className="w-full justify-start gap-2 text-sm hover:bg-teal-50 hover:border-teal-300 transition-colors">
                   <TrendingUp className="w-4 h-4" /> Browse Resources
                 </Button>
               </Link>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

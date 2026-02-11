@@ -70,9 +70,20 @@ export default function Progress() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-2xl font-bold text-slate-800 mb-1">My Progress</h1>
-        <p className="text-sm text-slate-500 mb-6">Track your learning journey and certification readiness</p>
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-8"
+      >
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center shadow-lg">
+            <BarChart3 className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-slate-800">My Progress</h1>
+            <p className="text-slate-500 mt-1">Track your learning journey and certification readiness</p>
+          </div>
+        </div>
       </motion.div>
 
       {/* Stats */}
