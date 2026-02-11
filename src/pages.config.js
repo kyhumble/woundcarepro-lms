@@ -55,18 +55,19 @@ import ChecklistDetail from './pages/ChecklistDetail';
 import Dashboard from './pages/Dashboard';
 import Discussions from './pages/Discussions';
 import Leaderboard from './pages/Leaderboard';
+import LearningPathDetail from './pages/LearningPathDetail';
+import LearningPaths from './pages/LearningPaths';
 import MockExamDetail from './pages/MockExamDetail';
 import MockExams from './pages/MockExams';
 import ModuleDetail from './pages/ModuleDetail';
 import Modules from './pages/Modules';
 import Progress from './pages/Progress';
 import QuizPage from './pages/QuizPage';
+import ResourceDetail from './pages/ResourceDetail';
 import ResourceLibrary from './pages/ResourceLibrary';
 import SkillsChecklists from './pages/SkillsChecklists';
 import StudyPlanner from './pages/StudyPlanner';
-import ResourceDetail from './pages/ResourceDetail';
-import LearningPaths from './pages/LearningPaths';
-import LearningPathDetail from './pages/LearningPathDetail';
+import Home from './pages/Home';
 import __Layout from './Layout.jsx';
 
 
@@ -79,18 +80,19 @@ export const PAGES = {
     "Dashboard": Dashboard,
     "Discussions": Discussions,
     "Leaderboard": Leaderboard,
+    "LearningPathDetail": LearningPathDetail,
+    "LearningPaths": LearningPaths,
     "MockExamDetail": MockExamDetail,
     "MockExams": MockExams,
     "ModuleDetail": ModuleDetail,
     "Modules": Modules,
     "Progress": Progress,
     "QuizPage": QuizPage,
+    "ResourceDetail": ResourceDetail,
     "ResourceLibrary": ResourceLibrary,
     "SkillsChecklists": SkillsChecklists,
     "StudyPlanner": StudyPlanner,
-    "ResourceDetail": ResourceDetail,
-    "LearningPaths": LearningPaths,
-    "LearningPathDetail": LearningPathDetail,
+    "Home": Home,
 }
 
 export const pagesConfig = {
