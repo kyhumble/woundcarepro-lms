@@ -76,10 +76,21 @@ export default function LearningPaths() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-800">Learning Paths</h1>
-        <p className="text-slate-500 mt-2">Follow structured curricula to achieve your learning goals</p>
-      </div>
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-8"
+      >
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center shadow-lg">
+            <BookOpen className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-slate-800">Learning Paths</h1>
+            <p className="text-slate-500 mt-1">Follow structured curricula to achieve your learning goals</p>
+          </div>
+        </div>
+      </motion.div>
 
       <div className="grid gap-6">
         {paths.map((path, i) => {
@@ -93,7 +104,8 @@ export default function LearningPaths() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="bg-white rounded-2xl border border-slate-200/60 overflow-hidden hover:shadow-lg transition-smooth"
+              whileHover={{ y: -4 }}
+              className="bg-white rounded-2xl border border-slate-200/60 overflow-hidden hover:shadow-xl hover:border-teal-200 transition-all"
             >
               <div className="p-6">
                 <div className="flex items-start justify-between gap-4 mb-4">
