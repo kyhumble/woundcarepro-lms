@@ -54,6 +54,7 @@ import Certificates from './pages/Certificates';
 import ChecklistDetail from './pages/ChecklistDetail';
 import Dashboard from './pages/Dashboard';
 import Discussions from './pages/Discussions';
+import Home from './pages/Home';
 import Leaderboard from './pages/Leaderboard';
 import LearningPathDetail from './pages/LearningPathDetail';
 import LearningPaths from './pages/LearningPaths';
@@ -67,7 +68,6 @@ import ResourceDetail from './pages/ResourceDetail';
 import ResourceLibrary from './pages/ResourceLibrary';
 import SkillsChecklists from './pages/SkillsChecklists';
 import StudyPlanner from './pages/StudyPlanner';
-import Home from './pages/Home';
 import __Layout from './Layout.jsx';
 
 
@@ -79,6 +79,7 @@ export const PAGES = {
     "ChecklistDetail": ChecklistDetail,
     "Dashboard": Dashboard,
     "Discussions": Discussions,
+    "Home": Home,
     "Leaderboard": Leaderboard,
     "LearningPathDetail": LearningPathDetail,
     "LearningPaths": LearningPaths,
@@ -92,7 +93,6 @@ export const PAGES = {
     "ResourceLibrary": ResourceLibrary,
     "SkillsChecklists": SkillsChecklists,
     "StudyPlanner": StudyPlanner,
-    "Home": Home,
 }
 
 export const pagesConfig = {

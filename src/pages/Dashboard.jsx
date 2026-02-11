@@ -17,6 +17,7 @@ import AchievementBadge from "../components/dashboard/AchievementBadge";
 import StreakWidget from "../components/gamification/StreakWidget";
 import PointsWidget from "../components/gamification/PointsWidget";
 import BadgeShowcase from "../components/gamification/BadgeShowcase";
+import InviteUserDialog from "../components/InviteUserDialog";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -105,9 +106,12 @@ export default function Dashboard() {
       >
         <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/20 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-teal-400/20 rounded-full blur-3xl"></div>
-        <div className="relative z-10">
-          <h2 className="text-3xl font-bold mb-2">Welcome back, {user?.full_name?.split(" ")[0] || "Learner"}!</h2>
-          <p className="text-teal-50 text-lg">Continue your wound care certification journey</p>
+        <div className="relative z-10 flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-bold mb-2">Welcome back, {user?.full_name?.split(" ")[0] || "Learner"}!</h2>
+            <p className="text-teal-50 text-lg">Continue your wound care certification journey</p>
+          </div>
+          <InviteUserDialog currentUser={user} />
         </div>
       </motion.div>
 
