@@ -30,6 +30,11 @@ const typeColors = {
 };
 
 export default function ResourceLibrary() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    base44.auth.me().then(setUser).catch(() => {});
+  }, []);
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [difficultyFilter, setDifficultyFilter] = useState("all");

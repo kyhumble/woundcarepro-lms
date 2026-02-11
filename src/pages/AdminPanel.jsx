@@ -4,8 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import {
   Shield, Users, BookOpen, FileText, ClipboardCheck,
-  Award, MessageSquare, BarChart3, Bell
+  Award, MessageSquare, BarChart3, Bell, Library
 } from "lucide-react";
+import ResourceManager from "../components/admin/ResourceManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -89,9 +90,15 @@ export default function AdminPanel() {
       <Tabs defaultValue="pending" className="space-y-6">
         <TabsList>
           <TabsTrigger value="pending">Pending Reviews</TabsTrigger>
+          <TabsTrigger value="resources">Resources</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
+
+        {/* Resources */}
+        <TabsContent value="resources">
+          <ResourceManager />
+        </TabsContent>
 
         {/* Pending Reviews */}
         <TabsContent value="pending">
