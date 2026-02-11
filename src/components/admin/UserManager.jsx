@@ -32,19 +32,35 @@ export default function UserManager() {
     queryFn: () => base44.entities.User.list("-created_date", 200),
   });
 
+  const [currentUser, setCurrentUser] = useState(null);
+
+  React.useEffect(() => {
+    base44.auth.me().then(setCurrentUser).catch(() => {});
+  }, []);
+
   const inviteUserMutation = useMutation({
     mutationFn: async ({ email, role }) => {
-      return await base44.users.inviteUser(email, role);
+      // First, invite the user through Base44
+      await base44.users.inviteUser(email, role);
+      
+      // Then send the invitation email
+      await base44.functions.invoke('sendUserInvitation', {
+        email,
+        role,
+        inviterName: currentUser?.full_name
+      });
+      
+      return { email, role };
     },
     onSuccess: () => {
-      toast.success("User invitation sent successfully!");
+      toast.success("Invitation sent successfully! User will receive an email.");
       setInviteEmail("");
       setInviteRole("user");
       setDialogOpen(false);
       queryClient.invalidateQueries({ queryKey: ["admin-all-users"] });
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to invite user");
+      toast.error(error.message || "Failed to send invitation");
     },
   });
 
