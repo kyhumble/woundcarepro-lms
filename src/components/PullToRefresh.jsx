@@ -4,7 +4,7 @@ import { RefreshCw } from "lucide-react";
 
 export default function PullToRefresh({ onRefresh, children }) {
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [pullDistance, setPullDistance] = useState(0);
+  const pullDistance = useMotionValue(0);
   const containerRef = useRef(null);
   const startY = useRef(0);
   const THRESHOLD = 80;
@@ -22,7 +22,7 @@ export default function PullToRefresh({ onRefresh, children }) {
     const distance = currentY - startY.current;
 
     if (distance > 0) {
-      setPullDistance(Math.min(distance, THRESHOLD * 1.5));
+      pullDistance.set(Math.min(distance, THRESHOLD * 1.5));
       if (distance > 10) {
         e.preventDefault();
       }
@@ -30,21 +30,24 @@ export default function PullToRefresh({ onRefresh, children }) {
   };
 
   const handleTouchEnd = async () => {
-    if (pullDistance >= THRESHOLD && !isRefreshing) {
+    if (pullDistance.get() >= THRESHOLD && !isRefreshing) {
       setIsRefreshing(true);
-      setPullDistance(THRESHOLD);
+      pullDistance.set(THRESHOLD);
       
       try {
         await onRefresh();
       } finally {
         setIsRefreshing(false);
-        setPullDistance(0);
+        pullDistance.set(0);
       }
     } else {
-      setPullDistance(0);
+      pullDistance.set(0);
     }
     startY.current = 0;
   };
+
+  const opacity = useTransform(pullDistance, [0, THRESHOLD], [0, 1]);
+  const rotation = useTransform(pullDistance, [0, THRESHOLD], [0, 360]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -59,16 +62,13 @@ export default function PullToRefresh({ onRefresh, children }) {
       container.removeEventListener("touchmove", handleTouchMove);
       container.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [pullDistance, isRefreshing]);
-
-  const opacity = useTransform([0, THRESHOLD], [0, 1], pullDistance);
-  const rotation = useTransform([0, THRESHOLD], [0, 360], pullDistance);
+  }, [isRefreshing]);
 
   return (
     <div ref={containerRef} className="relative">
       <motion.div
         className="absolute top-0 left-0 right-0 flex justify-center items-center pt-4 pb-2"
-        style={{ opacity: opacity / THRESHOLD, transform: `translateY(${Math.min(pullDistance - 50, 0)}px)` }}
+        style={{ opacity, y: useTransform(pullDistance, [0, THRESHOLD], [-50, 0]) }}
       >
         <motion.div
           style={{ rotate: isRefreshing ? undefined : rotation }}
@@ -80,10 +80,7 @@ export default function PullToRefresh({ onRefresh, children }) {
         </motion.div>
       </motion.div>
       
-      <motion.div
-        style={{ transform: `translateY(${Math.min(pullDistance, THRESHOLD)}px)` }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      >
+      <motion.div style={{ y: pullDistance }}>
         {children}
       </motion.div>
     </div>
