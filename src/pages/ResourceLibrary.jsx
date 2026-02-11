@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import {
   Search, FileText, Video, BookOpen, ExternalLink,
-  Download, Filter, Bookmark
+  Download, Filter, Bookmark, Plus
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -54,9 +56,18 @@ export default function ResourceLibrary() {
 
   return (
     <div className="max-w-5xl mx-auto">
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-2xl font-bold text-slate-800 mb-1">Resource Library</h1>
-        <p className="text-sm text-slate-500 mb-6">Supplementary materials, guidelines, and reference documents</p>
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-start justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800 mb-1">Resource Library</h1>
+          <p className="text-sm text-slate-500">Supplementary materials, guidelines, and reference documents</p>
+        </div>
+        {user?.role === "admin" && (
+          <Link to={createPageUrl("AdminPanel")}>
+            <Button className="bg-teal-600 hover:bg-teal-700 gap-2">
+              <Plus className="w-4 h-4" /> Manage Resources
+            </Button>
+          </Link>
+        )}
       </motion.div>
 
       {/* Filters */}
