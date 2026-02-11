@@ -54,15 +54,15 @@ import Certificates from './pages/Certificates';
 import ChecklistDetail from './pages/ChecklistDetail';
 import Dashboard from './pages/Dashboard';
 import Discussions from './pages/Discussions';
+import Leaderboard from './pages/Leaderboard';
+import MockExamDetail from './pages/MockExamDetail';
+import MockExams from './pages/MockExams';
 import ModuleDetail from './pages/ModuleDetail';
 import Modules from './pages/Modules';
 import Progress from './pages/Progress';
 import QuizPage from './pages/QuizPage';
 import ResourceLibrary from './pages/ResourceLibrary';
 import SkillsChecklists from './pages/SkillsChecklists';
-import MockExams from './pages/MockExams';
-import MockExamDetail from './pages/MockExamDetail';
-import Leaderboard from './pages/Leaderboard';
 import __Layout from './Layout.jsx';
 
 
@@ -74,15 +74,15 @@ export const PAGES = {
     "ChecklistDetail": ChecklistDetail,
     "Dashboard": Dashboard,
     "Discussions": Discussions,
+    "Leaderboard": Leaderboard,
+    "MockExamDetail": MockExamDetail,
+    "MockExams": MockExams,
     "ModuleDetail": ModuleDetail,
     "Modules": Modules,
     "Progress": Progress,
     "QuizPage": QuizPage,
     "ResourceLibrary": ResourceLibrary,
     "SkillsChecklists": SkillsChecklists,
-    "MockExams": MockExams,
-    "MockExamDetail": MockExamDetail,
-    "Leaderboard": Leaderboard,
 }
 
 export const pagesConfig = {

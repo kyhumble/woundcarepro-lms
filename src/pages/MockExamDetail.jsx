@@ -6,8 +6,10 @@ import { createPageUrl } from "../utils";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Clock, AlertTriangle, Flag, ChevronLeft, ChevronRight,
-  CheckCircle2, XCircle, TrendingUp, Award, BarChart3
+  CheckCircle2, XCircle, TrendingUp, Award, BarChart3, Sparkles
 } from "lucide-react";
+import DetailedAnalytics from "../components/mockexam/DetailedAnalytics";
+import { selectAdaptiveQuestions, getRecommendedDifficulty } from "../components/mockexam/AdaptiveQuestionSelector";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -45,13 +47,40 @@ export default function MockExamDetail() {
     enabled: !!examId,
   });
 
-  // Randomize questions when exam is loaded
+  const { data: userPreviousAttempts = [] } = useQuery({
+    queryKey: ["user-exam-attempts", examId],
+    queryFn: async () => {
+      if (!user?.email) return [];
+      return base44.entities.MockExamAttempt.filter({ 
+        user_email: user.email, 
+        exam_id: examId 
+      }, "-completed_at", 10);
+    },
+    enabled: !!user?.email && !!examId,
+  });
+
+  const { data: allExamAttempts = [] } = useQuery({
+    queryKey: ["all-exam-attempts", examId],
+    queryFn: async () => {
+      return base44.entities.MockExamAttempt.filter({ exam_id: examId }, "-completed_at", 200);
+    },
+    enabled: !!examId,
+  });
+
+  // Adaptive question selection based on previous performance
   const questions = useMemo(() => {
     if (!exam?.question_pool) return [];
+    
+    // Use adaptive selection if user has previous attempts
+    if (userPreviousAttempts.length > 0) {
+      return selectAdaptiveQuestions(exam.question_pool, userPreviousAttempts, exam.total_questions);
+    }
+    
+    // Otherwise, random selection
     return [...exam.question_pool]
       .sort(() => Math.random() - 0.5)
       .slice(0, exam.total_questions);
-  }, [exam]);
+  }, [exam, userPreviousAttempts]);
 
   const submitMutation = useMutation({
     mutationFn: async (attemptData) => {
@@ -181,6 +210,8 @@ export default function MockExamDetail() {
   // Results View
   if (showResults && results) {
     const passed = results.passed;
+    const recommendedDifficulty = getRecommendedDifficulty([...userPreviousAttempts, results]);
+    
     return (
       <div className="max-w-4xl mx-auto">
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
@@ -210,8 +241,35 @@ export default function MockExamDetail() {
             </p>
           </div>
 
+          {/* Adaptive Recommendation */}
+          {userPreviousAttempts.length > 0 && (
+            <div className="bg-purple-50 rounded-2xl border border-purple-200 p-5 mb-6">
+              <div className="flex items-start gap-3">
+                <Sparkles className="w-5 h-5 text-purple-600 mt-0.5" />
+                <div>
+                  <h3 className="font-semibold text-sm text-purple-900 mb-1">Adaptive Exam Mode Active</h3>
+                  <p className="text-xs text-purple-700">
+                    Questions were tailored to your skill level: <strong>{recommendedDifficulty}</strong>. 
+                    {recommendedDifficulty === "easier" && " Focus on fundamentals before advancing."}
+                    {recommendedDifficulty === "balanced" && " Continue building your knowledge base."}
+                    {recommendedDifficulty === "challenging" && " You're ready for more complex scenarios."}
+                    {recommendedDifficulty === "advanced" && " Excellent! You're being challenged at the highest level."}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Detailed Analytics */}
+          <DetailedAnalytics 
+            attempt={results}
+            exam={exam}
+            allAttempts={allExamAttempts}
+            questions={questions}
+          />
+
           {/* Domain Breakdown */}
-          <div className="bg-white rounded-2xl border border-slate-200/60 p-6 mb-6">
+          <div className="bg-white rounded-2xl border border-slate-200/60 p-6 mb-6 mt-6">
             <div className="flex items-center gap-2 mb-4">
               <BarChart3 className="w-5 h-5 text-teal-500" />
               <h3 className="text-lg font-bold text-slate-800">Performance by Domain</h3>
@@ -287,6 +345,9 @@ export default function MockExamDetail() {
 
   // Pre-start screen
   if (!hasStarted) {
+    const recommendedDifficulty = getRecommendedDifficulty(userPreviousAttempts);
+    const hasAdaptive = userPreviousAttempts.length > 0;
+    
     return (
       <div className="max-w-3xl mx-auto">
         <Link to={createPageUrl("MockExams")} className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-teal-600 mb-4">
@@ -297,6 +358,21 @@ export default function MockExamDetail() {
           <Badge variant="outline" className="mb-3">{exam.certification_type}</Badge>
           <h1 className="text-2xl font-bold text-slate-800 mb-2">{exam.title}</h1>
           <p className="text-sm text-slate-500 mb-6">{exam.description}</p>
+
+          {hasAdaptive && (
+            <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <Sparkles className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="font-semibold text-sm text-purple-900 mb-1">Adaptive Testing Enabled</h4>
+                  <p className="text-xs text-purple-700">
+                    Based on your {userPreviousAttempts.length} previous {userPreviousAttempts.length === 1 ? 'attempt' : 'attempts'}, 
+                    this exam will be tailored to your <strong>{recommendedDifficulty}</strong> skill level to maximize learning.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="bg-slate-50 rounded-xl p-5 mb-6">
             <h3 className="font-semibold text-sm text-slate-800 mb-3">Exam Details</h3>
