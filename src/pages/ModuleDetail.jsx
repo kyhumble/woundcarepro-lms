@@ -282,6 +282,28 @@ export default function ModuleDetail() {
                     <div className="prose prose-slate max-w-none prose-headings:font-bold prose-p:text-slate-600 prose-p:leading-relaxed">
                       <ReactMarkdown>{activeLesson.content_html || "Content coming soon..."}</ReactMarkdown>
                     </div>
+
+                    {/* Interactive Elements */}
+                    {activeLesson.inline_quiz && (
+                      <InlineQuiz
+                        question={activeLesson.inline_quiz.question}
+                        options={activeLesson.inline_quiz.options}
+                        correctAnswer={activeLesson.inline_quiz.correct_answer}
+                        explanation={activeLesson.inline_quiz.explanation}
+                      />
+                    )}
+
+                    {activeLesson.interactive_diagram && (
+                      <InteractiveDiagram
+                        title={activeLesson.interactive_diagram.title}
+                        imageUrl={activeLesson.interactive_diagram.image_url}
+                        hotspots={activeLesson.interactive_diagram.hotspots}
+                      />
+                    )}
+
+                    {activeLesson.key_terms && activeLesson.key_terms.length > 0 && (
+                      <FlashcardStack keyTerms={activeLesson.key_terms} />
+                    )}
                   </TabsContent>
 
                   <TabsContent value="terms">
