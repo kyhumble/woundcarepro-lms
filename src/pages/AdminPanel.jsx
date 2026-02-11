@@ -13,6 +13,7 @@ import AnnouncementManager from "../components/admin/AnnouncementManager";
 import AuditLog from "../components/admin/AuditLog";
 import StudentPortfolio from "../components/admin/StudentPortfolio";
 import LearningPathManager from "../components/admin/LearningPathManager";
+import UserManager from "../components/admin/UserManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -77,12 +78,20 @@ export default function AdminPanel() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="flex items-center gap-2 mb-1">
-          <Shield className="w-6 h-6 text-teal-500" />
-          <h1 className="text-2xl font-bold text-slate-800">Admin Panel</h1>
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-8"
+      >
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center shadow-lg">
+            <Shield className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-slate-800">Admin Panel</h1>
+            <p className="text-slate-500 mt-1">Manage content, users, and track platform analytics</p>
+          </div>
         </div>
-        <p className="text-sm text-slate-500 mb-6">Manage content, users, and track platform analytics</p>
       </motion.div>
 
       {/* Stats */}
@@ -93,8 +102,9 @@ export default function AdminPanel() {
         <StatsCard title="Quiz Pass Rate" value={`${passRate}%`} icon={BarChart3} color="rose" index={3} />
       </div>
 
-      <Tabs defaultValue="modules" className="space-y-6">
+      <Tabs defaultValue="users" className="space-y-6">
         <TabsList className="flex flex-wrap gap-1 h-auto lg:inline-flex">
+          <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="paths">Learning Paths</TabsTrigger>
           <TabsTrigger value="modules">Modules</TabsTrigger>
           <TabsTrigger value="lessons">Lessons</TabsTrigger>
@@ -105,6 +115,11 @@ export default function AdminPanel() {
           <TabsTrigger value="pending">Reviews</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
+
+        {/* User Management */}
+        <TabsContent value="users">
+          <UserManager />
+        </TabsContent>
 
         {/* Learning Paths */}
         <TabsContent value="paths">
@@ -202,32 +217,7 @@ export default function AdminPanel() {
           </div>
         </TabsContent>
 
-        {/* Users */}
-        <TabsContent value="users">
-          <Card className="rounded-2xl border-slate-200/60">
-            <CardHeader>
-              <CardTitle className="text-sm">Registered Users</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {users.map(u => (
-                  <div key={u.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">
-                        {u.full_name ? u.full_name[0].toUpperCase() : "U"}
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-slate-700">{u.full_name || "No name"}</p>
-                        <p className="text-[10px] text-slate-400">{u.email}</p>
-                      </div>
-                    </div>
-                    <Badge variant="outline" className="text-[10px] capitalize">{u.role}</Badge>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+
 
         {/* Analytics */}
         <TabsContent value="analytics">
