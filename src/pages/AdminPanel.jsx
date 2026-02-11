@@ -4,9 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import {
   Shield, Users, BookOpen, FileText, ClipboardCheck,
-  Award, MessageSquare, BarChart3, Bell, Library
+  Award, MessageSquare, BarChart3, Bell, Library, GraduationCap
 } from "lucide-react";
 import ResourceManager from "../components/admin/ResourceManager";
+import ModuleManager from "../components/admin/ModuleManager";
+import LessonManager from "../components/admin/LessonManager";
+import AnnouncementManager from "../components/admin/AnnouncementManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -87,17 +90,34 @@ export default function AdminPanel() {
         <StatsCard title="Quiz Pass Rate" value={`${passRate}%`} icon={BarChart3} color="rose" index={3} />
       </div>
 
-      <Tabs defaultValue="pending" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="pending">Pending Reviews</TabsTrigger>
+      <Tabs defaultValue="modules" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-flex">
+          <TabsTrigger value="modules">Modules</TabsTrigger>
+          <TabsTrigger value="lessons">Lessons</TabsTrigger>
           <TabsTrigger value="resources">Resources</TabsTrigger>
-          <TabsTrigger value="users">Users</TabsTrigger>
+          <TabsTrigger value="announcements">Announcements</TabsTrigger>
+          <TabsTrigger value="pending">Reviews</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
+
+        {/* Modules */}
+        <TabsContent value="modules">
+          <ModuleManager />
+        </TabsContent>
+
+        {/* Lessons */}
+        <TabsContent value="lessons">
+          <LessonManager />
+        </TabsContent>
 
         {/* Resources */}
         <TabsContent value="resources">
           <ResourceManager />
+        </TabsContent>
+
+        {/* Announcements */}
+        <TabsContent value="announcements">
+          <AnnouncementManager />
         </TabsContent>
 
         {/* Pending Reviews */}
