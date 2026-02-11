@@ -4,21 +4,50 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import {
   BarChart3, Clock, BookOpen, Award, Target,
-  CheckCircle2, TrendingUp, Calendar
+  CheckCircle2, TrendingUp, Calendar, Trash2
 } from "lucide-react";
 import { Progress as ProgressBar } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import StatsCard from "../components/dashboard/StatsCard";
 import AchievementBadge from "../components/dashboard/AchievementBadge";
 import moment from "moment";
 
 export default function Progress() {
   const [user, setUser] = useState(null);
+  const [deletingAccount, setDeletingAccount] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
+
+  const handleDeleteAccount = async () => {
+    setDeletingAccount(true);
+    try {
+      // Delete user's account
+      if (user?.id) {
+        await base44.entities.User.delete(user.id);
+        base44.auth.logout();
+      }
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      alert("Failed to delete account. Please contact support.");
+    } finally {
+      setDeletingAccount(false);
+    }
+  };
 
   const { data: modules = [] } = useQuery({
     queryKey: ["modules"],
@@ -214,6 +243,44 @@ export default function Progress() {
                   <p className="text-xs text-slate-400">Complete modules to earn certificates</p>
                 </div>
               )}
+            </CardContent>
+          </Card>
+
+          {/* Account Deletion */}
+          <Card className="rounded-2xl border-red-200/60 bg-red-50/50">
+            <CardHeader>
+              <CardTitle className="text-lg text-red-700" style={{ fontFamily: "'DM Sans', sans-serif" }}>Danger Zone</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-slate-600 mb-4">
+                Permanently delete your account and all associated data. This action cannot be undone.
+              </p>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" className="w-full" disabled={deletingAccount}>
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    {deletingAccount ? "Deleting..." : "Delete Account"}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will permanently delete your account and remove all your data from our servers.
+                      This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleDeleteAccount}
+                      className="bg-red-600 hover:bg-red-700"
+                    >
+                      Yes, delete my account
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </CardContent>
           </Card>
         </div>
