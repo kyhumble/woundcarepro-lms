@@ -12,6 +12,7 @@ import LessonManager from "../components/admin/LessonManager";
 import AnnouncementManager from "../components/admin/AnnouncementManager";
 import AuditLog from "../components/admin/AuditLog";
 import StudentPortfolio from "../components/admin/StudentPortfolio";
+import LearningPathManager from "../components/admin/LearningPathManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -94,6 +95,7 @@ export default function AdminPanel() {
 
       <Tabs defaultValue="modules" className="space-y-6">
         <TabsList className="flex flex-wrap gap-1 h-auto lg:inline-flex">
+          <TabsTrigger value="paths">Learning Paths</TabsTrigger>
           <TabsTrigger value="modules">Modules</TabsTrigger>
           <TabsTrigger value="lessons">Lessons</TabsTrigger>
           <TabsTrigger value="resources">Resources</TabsTrigger>
@@ -103,6 +105,11 @@ export default function AdminPanel() {
           <TabsTrigger value="pending">Reviews</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
+
+        {/* Learning Paths */}
+        <TabsContent value="paths">
+          <LearningPathManager />
+        </TabsContent>
 
         {/* Modules */}
         <TabsContent value="modules">
