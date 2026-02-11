@@ -63,6 +63,7 @@ import Progress from './pages/Progress';
 import QuizPage from './pages/QuizPage';
 import ResourceLibrary from './pages/ResourceLibrary';
 import SkillsChecklists from './pages/SkillsChecklists';
+import StudyPlanner from './pages/StudyPlanner';
 import __Layout from './Layout.jsx';
 
 
@@ -83,6 +84,7 @@ export const PAGES = {
     "QuizPage": QuizPage,
     "ResourceLibrary": ResourceLibrary,
     "SkillsChecklists": SkillsChecklists,
+    "StudyPlanner": StudyPlanner,
 }
 
 export const pagesConfig = {
