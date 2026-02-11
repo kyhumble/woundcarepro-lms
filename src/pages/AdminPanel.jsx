@@ -14,6 +14,8 @@ import AuditLog from "../components/admin/AuditLog";
 import StudentPortfolio from "../components/admin/StudentPortfolio";
 import LearningPathManager from "../components/admin/LearningPathManager";
 import UserManager from "../components/admin/UserManager";
+import AdvancedAnalytics from "../components/admin/AdvancedAnalytics";
+import QuizBuilder from "../components/admin/QuizBuilder";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -102,9 +104,11 @@ export default function AdminPanel() {
         <StatsCard title="Quiz Pass Rate" value={`${passRate}%`} icon={BarChart3} color="rose" index={3} />
       </div>
 
-      <Tabs defaultValue="users" className="space-y-6">
+      <Tabs defaultValue="analytics" className="space-y-6">
         <TabsList className="flex flex-wrap gap-1 h-auto lg:inline-flex">
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
+          <TabsTrigger value="quizzes">Quiz Builder</TabsTrigger>
           <TabsTrigger value="paths">Learning Paths</TabsTrigger>
           <TabsTrigger value="modules">Modules</TabsTrigger>
           <TabsTrigger value="lessons">Lessons</TabsTrigger>
@@ -113,12 +117,21 @@ export default function AdminPanel() {
           <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
           <TabsTrigger value="audit">Audit Log</TabsTrigger>
           <TabsTrigger value="pending">Reviews</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
+
+        {/* Advanced Analytics */}
+        <TabsContent value="analytics">
+          <AdvancedAnalytics />
+        </TabsContent>
 
         {/* User Management */}
         <TabsContent value="users">
           <UserManager />
+        </TabsContent>
+
+        {/* Quiz Builder */}
+        <TabsContent value="quizzes">
+          <QuizBuilder />
         </TabsContent>
 
         {/* Learning Paths */}
@@ -219,48 +232,7 @@ export default function AdminPanel() {
 
 
 
-        {/* Analytics */}
-        <TabsContent value="analytics">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="rounded-2xl border-slate-200/60">
-              <CardHeader>
-                <CardTitle className="text-sm">Recent Quiz Performance</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {quizAttempts.slice(0, 10).map(attempt => (
-                  <div key={attempt.id} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
-                    <div>
-                      <p className="text-sm text-slate-700">{attempt.user_email}</p>
-                      <p className="text-[10px] text-slate-400">{moment(attempt.created_date).fromNow()}</p>
-                    </div>
-                    <Badge className={attempt.passed ? "bg-teal-50 text-teal-700" : "bg-rose-50 text-rose-700"}>
-                      {attempt.score}%
-                    </Badge>
-                  </div>
-                ))}
-                {quizAttempts.length === 0 && <p className="text-sm text-slate-400 text-center py-4">No quiz data</p>}
-              </CardContent>
-            </Card>
 
-            <Card className="rounded-2xl border-slate-200/60">
-              <CardHeader>
-                <CardTitle className="text-sm">Recent Certificates</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {certificates.slice(0, 10).map(cert => (
-                  <div key={cert.id} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
-                    <div>
-                      <p className="text-sm text-slate-700">{cert.user_name}</p>
-                      <p className="text-[10px] text-slate-400">{cert.title}</p>
-                    </div>
-                    <span className="text-[10px] text-slate-400">{moment(cert.issue_date).format("MMM D")}</span>
-                  </div>
-                ))}
-                {certificates.length === 0 && <p className="text-sm text-slate-400 text-center py-4">No certificates issued</p>}
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
       </Tabs>
     </div>
   );
