@@ -10,6 +10,8 @@ import ResourceManager from "../components/admin/ResourceManager";
 import ModuleManager from "../components/admin/ModuleManager";
 import LessonManager from "../components/admin/LessonManager";
 import AnnouncementManager from "../components/admin/AnnouncementManager";
+import AuditLog from "../components/admin/AuditLog";
+import StudentPortfolio from "../components/admin/StudentPortfolio";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -91,11 +93,13 @@ export default function AdminPanel() {
       </div>
 
       <Tabs defaultValue="modules" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-flex">
+        <TabsList className="flex flex-wrap gap-1 h-auto lg:inline-flex">
           <TabsTrigger value="modules">Modules</TabsTrigger>
           <TabsTrigger value="lessons">Lessons</TabsTrigger>
           <TabsTrigger value="resources">Resources</TabsTrigger>
           <TabsTrigger value="announcements">Announcements</TabsTrigger>
+          <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
+          <TabsTrigger value="audit">Audit Log</TabsTrigger>
           <TabsTrigger value="pending">Reviews</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
@@ -118,6 +122,16 @@ export default function AdminPanel() {
         {/* Announcements */}
         <TabsContent value="announcements">
           <AnnouncementManager />
+        </TabsContent>
+
+        {/* Student Portfolio */}
+        <TabsContent value="portfolio">
+          <StudentPortfolio />
+        </TabsContent>
+
+        {/* Audit Log */}
+        <TabsContent value="audit">
+          <AuditLog />
         </TabsContent>
 
         {/* Pending Reviews */}

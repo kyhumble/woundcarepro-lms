@@ -108,19 +108,18 @@ export default function ResourceLibrary() {
         {filtered.map((resource, i) => {
           const Icon = typeIcons[resource.resource_type] || FileText;
           const color = typeColors[resource.resource_type] || typeColors.article;
-          const link = resource.file_url || resource.url;
 
           return (
-            <motion.a
+            <Link
               key={resource.id}
-              href={link}
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.04 }}
-              className="bg-white rounded-2xl border border-slate-200/60 p-5 hover:shadow-lg hover:border-teal-200 transition-smooth group"
+              to={createPageUrl(`ResourceDetail?id=${resource.id}`)}
             >
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.04 }}
+                className="bg-white rounded-2xl border border-slate-200/60 p-5 hover:shadow-lg hover:border-teal-200 transition-smooth group cursor-pointer"
+              >
               <div className="flex items-start gap-4">
                 <div className={`w-11 h-11 rounded-xl ${color} flex items-center justify-center flex-shrink-0`}>
                   <Icon className="w-5 h-5" />
@@ -144,7 +143,8 @@ export default function ResourceLibrary() {
                 </div>
                 <ExternalLink className="w-4 h-4 text-slate-300 group-hover:text-teal-500 flex-shrink-0 mt-1" />
               </div>
-            </motion.a>
+            </motion.div>
+            </Link>
           );
         })}
       </div>
