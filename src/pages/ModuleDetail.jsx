@@ -14,6 +14,9 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReactMarkdown from "react-markdown";
 import VideoPlayer from "../components/lesson/VideoPlayer";
+import InlineQuiz from "../components/lesson/InlineQuiz";
+import FlashcardStack from "../components/lesson/FlashcardStack";
+import InteractiveDiagram from "../components/lesson/InteractiveDiagram";
 
 export default function ModuleDetail() {
   const params = new URLSearchParams(window.location.search);
