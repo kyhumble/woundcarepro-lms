@@ -75,8 +75,9 @@ export default function Layout({ children, currentPageName }) {
             </div>
             {sidebarOpen && (
               <div className="flex flex-col">
-                <span className="font-semibold text-sm tracking-wide whitespace-nowrap">Healing Compass Academy</span>
-                <span className="text-[10px] text-slate-400 mt-0.5 whitespace-nowrap">Wound Care</span>
+                <span className="font-semibold text-sm tracking-wide whitespace-nowrap">Healing Compass</span>
+                <span className="text-[10px] text-teal-400 tracking-widest uppercase">Academy</span>
+                <span className="text-[9px] text-slate-400 mt-0.5 whitespace-nowrap">Total Wound Care</span>
               </div>
             )}
           </div>
@@ -127,8 +128,9 @@ export default function Layout({ children, currentPageName }) {
                   <GraduationCap className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-semibold text-sm">Healing Compass Academy</span>
-                  <span className="text-[9px] text-slate-400">Wound Care</span>
+                  <span className="font-semibold text-sm">Healing Compass</span>
+                  <span className="text-[10px] text-teal-400 tracking-widest uppercase">Academy</span>
+                  <span className="text-[9px] text-slate-400">Total Wound Care</span>
                 </div>
               </div>
               <button onClick={() => setMobileMenuOpen(false)}>

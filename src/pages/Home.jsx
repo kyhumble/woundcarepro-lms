@@ -46,7 +46,8 @@ export default function Home() {
               <GraduationCap className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="font-bold text-white text-lg">Healing Compass Academy - Wound Care</h1>
+              <h1 className="font-bold text-white text-lg">Healing Compass Academy</h1>
+              <p className="text-xs text-teal-300">Total Wound Care Education</p>
             </div>
           </div>
           <Button
@@ -217,7 +218,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="py-8 px-6 bg-slate-900 border-t border-slate-800">
         <div className="max-w-7xl mx-auto text-center text-slate-400 text-sm">
-          <p>&copy; 2026 Healing Compass Academy - Wound Care. All rights reserved.</p>
+          <p>&copy; 2026 Healing Compass Academy. All rights reserved.</p>
         </div>
       </footer>
     </div>
