@@ -26,8 +26,11 @@ export default function LessonManager() {
     video_url: "",
     video_duration_minutes: 0,
     estimated_minutes: 0,
-    status: "published"
+    status: "published",
+    associated_skills: []
   });
+
+  const [skillInput, setSkillInput] = useState("");
 
   const { data: modules = [] } = useQuery({
     queryKey: ["modules"],
@@ -86,10 +89,12 @@ export default function LessonManager() {
       video_url: "",
       video_duration_minutes: 0,
       estimated_minutes: 0,
-      status: "published"
+      status: "published",
+      associated_skills: []
     });
     setEditingLesson(null);
     setIsDialogOpen(false);
+    setSkillInput("");
   };
 
   const handleEdit = (lesson) => {
@@ -103,9 +108,27 @@ export default function LessonManager() {
       video_url: lesson.video_url || "",
       video_duration_minutes: lesson.video_duration_minutes || 0,
       estimated_minutes: lesson.estimated_minutes || 0,
-      status: lesson.status
+      status: lesson.status,
+      associated_skills: lesson.associated_skills || []
     });
     setIsDialogOpen(true);
+  };
+
+  const addSkill = () => {
+    if (skillInput.trim() && !formData.associated_skills.includes(skillInput.trim())) {
+      setFormData({
+        ...formData,
+        associated_skills: [...formData.associated_skills, skillInput.trim()]
+      });
+      setSkillInput("");
+    }
+  };
+
+  const removeSkill = (skill) => {
+    setFormData({
+      ...formData,
+      associated_skills: formData.associated_skills.filter(s => s !== skill)
+    });
   };
 
   return (
@@ -228,6 +251,35 @@ export default function LessonManager() {
                       <SelectItem value="draft">Draft</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+
+                <div className="col-span-2">
+                  <Label>Associated Skills</Label>
+                  <div className="flex gap-2 mb-2">
+                    <Input
+                      placeholder="e.g., Wound Assessment, Dressing Selection"
+                      value={skillInput}
+                      onChange={(e) => setSkillInput(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
+                    />
+                    <Button type="button" onClick={addSkill} variant="outline">
+                      Add
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {formData.associated_skills.map((skill, i) => (
+                      <Badge key={i} variant="outline" className="gap-1">
+                        {skill}
+                        <button
+                          type="button"
+                          onClick={() => removeSkill(skill)}
+                          className="ml-1 hover:text-red-600"
+                        >
+                          ×
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
               </div>
 

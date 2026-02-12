@@ -35,7 +35,8 @@ export default function QuizBuilder() {
     question_text: "",
     question_type: "multiple_choice",
     options: [{ text: "", is_correct: false }],
-    explanation: ""
+    explanation: "",
+    associated_skill: ""
   });
 
   const queryClient = useQueryClient();
@@ -132,7 +133,8 @@ export default function QuizBuilder() {
       question_text: "",
       question_type: "multiple_choice",
       options: [{ text: "", is_correct: false }],
-      explanation: ""
+      explanation: "",
+      associated_skill: ""
     });
     toast.success("Question added!");
   };
@@ -305,6 +307,16 @@ export default function QuizBuilder() {
                           onChange={(e) => setCurrentQuestion({ ...currentQuestion, explanation: e.target.value })}
                           rows={2}
                         />
+                      </div>
+
+                      <div>
+                        <label className="text-sm font-medium text-slate-700 mb-1 block">Associated Skill (optional)</label>
+                        <Input
+                          placeholder="e.g., Pressure Injury Staging"
+                          value={currentQuestion.associated_skill}
+                          onChange={(e) => setCurrentQuestion({ ...currentQuestion, associated_skill: e.target.value })}
+                        />
+                        <p className="text-xs text-slate-500 mt-1">Link this question to a specific skill for mastery tracking</p>
                       </div>
 
                       <Button onClick={addQuestion} variant="outline" className="w-full">
