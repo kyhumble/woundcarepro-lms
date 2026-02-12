@@ -66,9 +66,9 @@ import Progress from './pages/Progress';
 import QuizPage from './pages/QuizPage';
 import ResourceDetail from './pages/ResourceDetail';
 import ResourceLibrary from './pages/ResourceLibrary';
+import SkillMastery from './pages/SkillMastery';
 import SkillsChecklists from './pages/SkillsChecklists';
 import StudyPlanner from './pages/StudyPlanner';
-import SkillMastery from './pages/SkillMastery';
 import __Layout from './Layout.jsx';
 
 
@@ -92,9 +92,9 @@ export const PAGES = {
     "QuizPage": QuizPage,
     "ResourceDetail": ResourceDetail,
     "ResourceLibrary": ResourceLibrary,
+    "SkillMastery": SkillMastery,
     "SkillsChecklists": SkillsChecklists,
     "StudyPlanner": StudyPlanner,
-    "SkillMastery": SkillMastery,
 }
 
 export const pagesConfig = {

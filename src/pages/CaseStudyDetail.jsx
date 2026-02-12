@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import InteractiveCaseStudy from "../components/case-study/InteractiveCaseStudy";
 
 export default function CaseStudyDetail() {
   const params = new URLSearchParams(window.location.search);
@@ -47,6 +48,19 @@ export default function CaseStudyDetail() {
     enabled: !!user?.email && !!caseId,
   });
 
+  const { data: interactiveProgress } = useQuery({
+    queryKey: ["interactive-progress", caseId],
+    queryFn: async () => {
+      if (!user?.email) return null;
+      const progress = await base44.entities.InteractiveCaseProgress.filter({
+        case_study_id: caseId,
+        user_email: user.email,
+      });
+      return progress[0] || null;
+    },
+    enabled: !!user?.email && !!caseId && caseStudy?.case_type === "interactive",
+  });
+
   const submitMutation = useMutation({
     mutationFn: () =>
       base44.entities.CaseStudySubmission.create({
@@ -69,6 +83,7 @@ export default function CaseStudyDetail() {
   }
 
   const isSubmitted = submitted || !!existingSubmission;
+  const isInteractive = caseStudy.case_type === "interactive";
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -76,7 +91,16 @@ export default function CaseStudyDetail() {
         <ArrowLeft className="w-4 h-4" /> Back to Case Studies
       </Link>
 
-      {/* Header */}
+      {/* Interactive Case Study */}
+      {isInteractive ? (
+        <InteractiveCaseStudy
+          caseStudy={caseStudy}
+          userEmail={user?.email}
+          existingProgress={interactiveProgress}
+        />
+      ) : (
+        <>
+          {/* Header */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         <Card className="rounded-2xl border-slate-200/60 mb-6">
           <CardHeader>
@@ -216,6 +240,8 @@ export default function CaseStudyDetail() {
             </CardContent>
           </Card>
         </motion.div>
+      )}
+        </>
       )}
     </div>
   );

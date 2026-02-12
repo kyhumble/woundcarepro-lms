@@ -109,6 +109,11 @@ export default function CaseStudies() {
                       {cs.patient_background}
                     </p>
                     <div className="flex items-center gap-2 mt-3">
+                      {cs.case_type === "interactive" && (
+                        <Badge className="bg-purple-50 text-purple-700 border-purple-200 text-[10px]">
+                          Interactive
+                        </Badge>
+                      )}
                       {cs.difficulty && (
                         <Badge variant="outline" className={`text-[10px] ${difficultyColors[cs.difficulty]}`}>
                           {cs.difficulty}
@@ -119,9 +124,15 @@ export default function CaseStudies() {
                           {getModuleName(cs.module_id)}
                         </Badge>
                       )}
-                      <span className="text-[10px] text-slate-400">
-                        {cs.questions?.length || 0} questions
-                      </span>
+                      {cs.case_type === "interactive" ? (
+                        <span className="text-[10px] text-slate-400">
+                          {cs.interactive_scenario?.stages?.length || 0} stages
+                        </span>
+                      ) : (
+                        <span className="text-[10px] text-slate-400">
+                          {cs.questions?.length || 0} questions
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
