@@ -3,11 +3,12 @@ import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "./utils";
 import { base44 } from "@/api/base44Client";
 import { AnimatePresence, motion } from "framer-motion";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   LayoutDashboard, BookOpen, Award, FileText, Library,
   MessageSquare, Settings, ChevronLeft, ChevronRight,
   Bell, LogOut, Menu, X, GraduationCap, ClipboardCheck,
-  BarChart3, User, Shield, Trophy, Calendar
+  BarChart3, User, Shield, Trophy, Calendar, CheckCheck
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -19,6 +20,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import moment from "moment";
 
 const NAV_ITEMS = [
   { label: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
@@ -44,15 +51,54 @@ export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
   const [tabHistory, setTabHistory] = useState(() => {
     const saved = localStorage.getItem('tab_history');
     return saved ? JSON.parse(saved) : {};
   });
   const location = useLocation();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
+
+  const { data: notifications = [] } = useQuery({
+    queryKey: ["notifications", user?.email],
+    queryFn: () => base44.entities.Notification.filter({ user_email: user.email }, "-created_date", 20),
+    enabled: !!user?.email,
+    refetchInterval: 30000, // Refetch every 30 seconds
+  });
+
+  const markAsReadMutation = useMutation({
+    mutationFn: (id) => base44.entities.Notification.update(id, { is_read: true, read_at: new Date().toISOString() }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    },
+  });
+
+  const markAllAsReadMutation = useMutation({
+    mutationFn: async () => {
+      const unread = notifications.filter(n => !n.is_read);
+      await Promise.all(unread.map(n => 
+        base44.entities.Notification.update(n.id, { is_read: true, read_at: new Date().toISOString() })
+      ));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    },
+  });
+
+  const unreadCount = notifications.filter(n => !n.is_read).length;
+
+  const getNotificationIcon = (type) => {
+    switch (type) {
+      case "achievement": return "🏆";
+      case "success": return "✅";
+      case "warning": return "⚠️";
+      default: return "ℹ️";
+    }
+  };
 
   useEffect(() => {
     localStorage.setItem('tab_history', JSON.stringify(tabHistory));
@@ -199,10 +245,76 @@ export default function Layout({ children, currentPageName }) {
           </div>
 
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="relative text-slate-500">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-teal-500 rounded-full" />
-            </Button>
+            <Popover open={notificationOpen} onOpenChange={setNotificationOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" className="relative text-slate-500">
+                  <Bell className="w-5 h-5" />
+                  {unreadCount > 0 && (
+                    <span className="absolute top-1 right-1 w-5 h-5 bg-teal-500 rounded-full flex items-center justify-center text-white text-[10px] font-bold">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-0" align="end">
+                <div className="border-b px-4 py-3 flex items-center justify-between">
+                  <h3 className="font-semibold text-slate-800">Notifications</h3>
+                  {unreadCount > 0 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => markAllAsReadMutation.mutate()}
+                      className="h-7 text-xs gap-1"
+                    >
+                      <CheckCheck className="w-3 h-3" />
+                      Mark all read
+                    </Button>
+                  )}
+                </div>
+                <div className="max-h-[400px] overflow-y-auto">
+                  {notifications.length > 0 ? (
+                    notifications.map((notif) => (
+                      <div
+                        key={notif.id}
+                        className={`px-4 py-3 border-b hover:bg-slate-50 cursor-pointer transition-colors ${
+                          !notif.is_read ? "bg-teal-50/30" : ""
+                        }`}
+                        onClick={() => {
+                          if (!notif.is_read) markAsReadMutation.mutate(notif.id);
+                          if (notif.link) {
+                            setNotificationOpen(false);
+                            window.location.href = notif.link;
+                          }
+                        }}
+                      >
+                        <div className="flex gap-2">
+                          <span className="text-lg flex-shrink-0">{getNotificationIcon(notif.type)}</span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-slate-800 line-clamp-1">
+                              {notif.title}
+                            </p>
+                            <p className="text-xs text-slate-600 line-clamp-2 mt-0.5">
+                              {notif.message}
+                            </p>
+                            <p className="text-[10px] text-slate-400 mt-1">
+                              {moment(notif.created_date).fromNow()}
+                            </p>
+                          </div>
+                          {!notif.is_read && (
+                            <div className="w-2 h-2 bg-teal-500 rounded-full flex-shrink-0 mt-1.5" />
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="py-12 text-center">
+                      <Bell className="w-12 h-12 mx-auto text-slate-200 mb-2" />
+                      <p className="text-sm text-slate-400">No notifications yet</p>
+                    </div>
+                  )}
+                </div>
+              </PopoverContent>
+            </Popover>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
