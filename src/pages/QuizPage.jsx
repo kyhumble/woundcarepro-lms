@@ -6,7 +6,7 @@ import { createPageUrl } from "../utils";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, ArrowRight, CheckCircle2, XCircle, Clock,
-  Award, RotateCcw, ChevronLeft, Flag
+  Award, RotateCcw, ChevronLeft, Flag, TrendingUp
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +14,8 @@ import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import QuizAnalytics from "../components/quiz/QuizAnalytics";
 
 export default function QuizPage() {
   const params = new URLSearchParams(window.location.search);
@@ -24,6 +26,7 @@ export default function QuizPage() {
   const [showResults, setShowResults] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
   const [startTime] = useState(Date.now());
+  const [quizAttempt, setQuizAttempt] = useState(null);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -39,6 +42,15 @@ export default function QuizPage() {
     enabled: !!quizId,
   });
 
+  const { data: module } = useQuery({
+    queryKey: ["module", quiz?.module_id],
+    queryFn: async () => {
+      const modules = await base44.entities.Module.filter({ id: quiz.module_id });
+      return modules[0];
+    },
+    enabled: !!quiz?.module_id,
+  });
+
   const questions = useMemo(() => {
     if (!quiz?.questions) return [];
     if (quiz.randomize_questions) {
@@ -49,7 +61,7 @@ export default function QuizPage() {
 
   const submitMutation = useMutation({
     mutationFn: async (result) => {
-      return base44.entities.QuizAttempt.create({
+      const attempt = await base44.entities.QuizAttempt.create({
         quiz_id: quizId,
         module_id: quiz.module_id,
         user_email: user.email,
@@ -60,6 +72,8 @@ export default function QuizPage() {
         time_spent_minutes: Math.round((Date.now() - startTime) / 60000),
         completed_at: new Date().toISOString(),
       });
+      setQuizAttempt(attempt);
+      return attempt;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["quiz-attempts"] });
@@ -114,73 +128,92 @@ export default function QuizPage() {
 
   if (showResults) {
     return (
-      <div className="max-w-2xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="bg-white rounded-2xl border border-slate-200/60 p-8 text-center"
-        >
-          <div className={`w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center ${
-            passed ? "bg-teal-50" : "bg-rose-50"
-          }`}>
-            {passed ? (
-              <Award className="w-10 h-10 text-teal-500" />
-            ) : (
-              <XCircle className="w-10 h-10 text-rose-500" />
-            )}
-          </div>
-          <h2 className="text-2xl font-bold text-slate-800 mb-2">
-            {passed ? "Congratulations!" : "Keep Studying"}
-          </h2>
-          <p className="text-slate-500 mb-4">
-            {passed ? "You passed the quiz!" : `You need ${quiz.passing_score}% to pass.`}
-          </p>
-          <div className="text-5xl font-bold mb-6" style={{ color: passed ? "#0D9488" : "#E11D48" }}>
-            {score}%
-          </div>
-          <div className="flex items-center justify-center gap-6 text-sm text-slate-500 mb-8">
-            <span>Correct: {questions.filter(q => {
-              const s = answers[q.id] || [];
-              const c = q.options.filter(o => o.is_correct).map(o => o.id);
-              return s.length === c.length && s.every(x => c.includes(x));
-            }).length}/{questions.length}</span>
-            <span>Time: {Math.round((Date.now() - startTime) / 60000)}min</span>
-          </div>
+      <div className="max-w-5xl mx-auto">
+        <Link to={createPageUrl(`ModuleDetail?id=${quiz.module_id}`)} className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-teal-600 mb-4">
+          <ArrowLeft className="w-4 h-4" /> Back to Module
+        </Link>
 
-          {/* Review answers */}
-          <div className="text-left space-y-4 mb-8">
-            {questions.map((q, i) => {
-              const selected = answers[q.id] || [];
-              const correctIds = q.options.filter(o => o.is_correct).map(o => o.id);
-              const isCorrect = selected.length === correctIds.length && selected.every(s => correctIds.includes(s));
+        <Tabs defaultValue="summary" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2 max-w-md">
+            <TabsTrigger value="summary">Summary</TabsTrigger>
+            <TabsTrigger value="analytics" className="gap-2">
+              <TrendingUp className="w-4 h-4" /> Analytics
+            </TabsTrigger>
+          </TabsList>
 
-              return (
-                <div key={q.id} className={`p-4 rounded-xl border ${isCorrect ? "border-teal-200 bg-teal-50/50" : "border-rose-200 bg-rose-50/50"}`}>
-                  <div className="flex items-start gap-2 mb-2">
-                    {isCorrect ? <CheckCircle2 className="w-4 h-4 text-teal-500 mt-0.5" /> : <XCircle className="w-4 h-4 text-rose-500 mt-0.5" />}
-                    <p className="text-sm font-medium text-slate-700">{i + 1}. {q.question_text}</p>
-                  </div>
-                  {q.explanation && (
-                    <p className="text-xs text-slate-500 ml-6 mt-1">{q.explanation}</p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          <TabsContent value="summary">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-white rounded-2xl border border-slate-200/60 p-8 text-center"
+            >
+              <div className={`w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center ${
+                passed ? "bg-teal-50" : "bg-rose-50"
+              }`}>
+                {passed ? (
+                  <Award className="w-10 h-10 text-teal-500" />
+                ) : (
+                  <XCircle className="w-10 h-10 text-rose-500" />
+                )}
+              </div>
+              <h2 className="text-2xl font-bold text-slate-800 mb-2">
+                {passed ? "Congratulations!" : "Keep Studying"}
+              </h2>
+              <p className="text-slate-500 mb-4">
+                {passed ? "You passed the quiz!" : `You need ${quiz.passing_score}% to pass.`}
+              </p>
+              <div className="text-5xl font-bold mb-6" style={{ color: passed ? "#0D9488" : "#E11D48" }}>
+                {score}%
+              </div>
+              <div className="flex items-center justify-center gap-6 text-sm text-slate-500 mb-8">
+                <span>Correct: {questions.filter(q => {
+                  const s = answers[q.id] || [];
+                  const c = q.options.filter(o => o.is_correct).map(o => o.id);
+                  return s.length === c.length && s.every(x => c.includes(x));
+                }).length}/{questions.length}</span>
+                <span>Time: {Math.round((Date.now() - startTime) / 60000)}min</span>
+              </div>
 
-          <div className="flex gap-3 justify-center">
-            <Link to={createPageUrl(`ModuleDetail?id=${quiz.module_id}`)}>
-              <Button variant="outline" className="gap-2">
-                <ArrowLeft className="w-4 h-4" /> Back to Module
-              </Button>
-            </Link>
-            {!passed && (
-              <Button onClick={() => { setShowResults(false); setCurrentQ(0); setAnswers({}); }} className="gap-2 bg-teal-600 hover:bg-teal-700">
-                <RotateCcw className="w-4 h-4" /> Try Again
-              </Button>
-            )}
-          </div>
-        </motion.div>
+              {/* Review answers */}
+              <div className="text-left space-y-4 mb-8">
+                {questions.map((q, i) => {
+                  const selected = answers[q.id] || [];
+                  const correctIds = q.options.filter(o => o.is_correct).map(o => o.id);
+                  const isCorrect = selected.length === correctIds.length && selected.every(s => correctIds.includes(s));
+
+                  return (
+                    <div key={q.id} className={`p-4 rounded-xl border ${isCorrect ? "border-teal-200 bg-teal-50/50" : "border-rose-200 bg-rose-50/50"}`}>
+                      <div className="flex items-start gap-2 mb-2">
+                        {isCorrect ? <CheckCircle2 className="w-4 h-4 text-teal-500 mt-0.5" /> : <XCircle className="w-4 h-4 text-rose-500 mt-0.5" />}
+                        <p className="text-sm font-medium text-slate-700">{i + 1}. {q.question_text}</p>
+                      </div>
+                      {q.explanation && (
+                        <p className="text-xs text-slate-500 ml-6 mt-1">{q.explanation}</p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="flex gap-3 justify-center">
+                <Link to={createPageUrl(`ModuleDetail?id=${quiz.module_id}`)}>
+                  <Button variant="outline" className="gap-2">
+                    <ArrowLeft className="w-4 h-4" /> Back to Module
+                  </Button>
+                </Link>
+                {!passed && (
+                  <Button onClick={() => { setShowResults(false); setCurrentQ(0); setAnswers({}); setQuizAttempt(null); }} className="gap-2 bg-teal-600 hover:bg-teal-700">
+                    <RotateCcw className="w-4 h-4" /> Try Again
+                  </Button>
+                )}
+              </div>
+            </motion.div>
+          </TabsContent>
+
+          <TabsContent value="analytics">
+            {quizAttempt && <QuizAnalytics quizAttempt={quizAttempt} quiz={quiz} module={module} />}
+          </TabsContent>
+        </Tabs>
       </div>
     );
   }
