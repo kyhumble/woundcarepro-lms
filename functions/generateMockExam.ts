@@ -137,13 +137,12 @@ Deno.serve(async (req) => {
     // Create the mock exam
     const mockExam = await base44.asServiceRole.entities.MockExam.create({
       title: "Comprehensive Wound Care Certification Exam",
+      certification_type: "WOCN",
       description: "100-question comprehensive exam covering all aspects of wound care including assessment, pressure injuries, diabetic foot care, vascular ulcers, wound healing physiology, infection control, debridement, dressings, nutrition, pain management, and documentation.",
-      exam_type: "certification_prep",
       total_questions: 100,
       time_limit_minutes: 180,
       passing_score: 75,
-      difficulty_level: "advanced",
-      questions: questions.map((q, idx) => ({
+      question_pool: questions.map((q, idx) => ({
         id: `q${idx + 1}`,
         question_text: q.question,
         question_type: "multiple_choice",
@@ -152,13 +151,9 @@ Deno.serve(async (req) => {
           text: opt,
           is_correct: i === q.correct
         })),
-        category: q.category,
-        difficulty: q.difficulty,
-        explanation: null
+        domain: q.category,
+        rationale: `This question assesses knowledge in ${q.category}.`
       })),
-      randomize_questions: true,
-      show_results_immediately: true,
-      certification_alignment: ["WOCN", "CWS", "CWCN"],
       status: "published"
     });
 
