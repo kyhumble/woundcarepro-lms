@@ -16,7 +16,7 @@ import LearningPathManager from "../components/admin/LearningPathManager";
 import UserManager from "../components/admin/UserManager";
 import AdvancedAnalytics from "../components/admin/AdvancedAnalytics";
 import QuizBuilder from "../components/admin/QuizBuilder";
-import InteractiveCaseManager from "../components/admin/InteractiveCaseManager";
+import CaseStudyManager from "../components/admin/CaseStudyManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -110,7 +110,7 @@ export default function AdminPanel() {
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="quizzes">Quiz Builder</TabsTrigger>
-          <TabsTrigger value="interactive-cases">Interactive Cases</TabsTrigger>
+          <TabsTrigger value="case-studies">Case Studies</TabsTrigger>
           <TabsTrigger value="paths">Learning Paths</TabsTrigger>
           <TabsTrigger value="modules">Modules</TabsTrigger>
           <TabsTrigger value="lessons">Lessons</TabsTrigger>
@@ -136,9 +136,9 @@ export default function AdminPanel() {
           <QuizBuilder />
         </TabsContent>
 
-        {/* Interactive Cases */}
-        <TabsContent value="interactive-cases">
-          <InteractiveCaseManager />
+        {/* Case Studies */}
+        <TabsContent value="case-studies">
+          <CaseStudyManager />
         </TabsContent>
 
         {/* Learning Paths */}
