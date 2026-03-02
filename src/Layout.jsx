@@ -39,6 +39,7 @@ const NAV_ITEMS = [
   { label: "Discussions", icon: MessageSquare, page: "Discussions" },
   { label: "Skill Mastery", icon: Trophy, page: "SkillMastery" },
   { label: "Leaderboard", icon: Trophy, page: "Leaderboard" },
+  { label: "My Portfolio", icon: BarChart3, page: "Portfolio" },
   { label: "My Progress", icon: BarChart3, page: "Progress" },
   { label: "Certificates", icon: Award, page: "Certificates" },
 ];
