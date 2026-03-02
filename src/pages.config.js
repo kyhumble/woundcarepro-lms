@@ -69,6 +69,7 @@ import ResourceLibrary from './pages/ResourceLibrary';
 import SkillMastery from './pages/SkillMastery';
 import SkillsChecklists from './pages/SkillsChecklists';
 import StudyPlanner from './pages/StudyPlanner';
+import Portfolio from './pages/Portfolio';
 import __Layout from './Layout.jsx';
 
 
@@ -95,6 +96,7 @@ export const PAGES = {
     "SkillMastery": SkillMastery,
     "SkillsChecklists": SkillsChecklists,
     "StudyPlanner": StudyPlanner,
+    "Portfolio": Portfolio,
 }
 
 export const pagesConfig = {
