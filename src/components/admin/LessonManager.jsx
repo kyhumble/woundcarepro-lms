@@ -11,7 +11,7 @@ import { Trash2, Edit, Plus, Video, FileText, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
 export default function LessonManager() {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [editingLesson, setEditingLesson] = useState(null);
   const [selectedModule, setSelectedModule] = useState("");
   const queryClient = useQueryClient();
