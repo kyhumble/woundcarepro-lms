@@ -130,6 +130,163 @@ export default function LessonManager() {
     });
   };
 
+  // Full-page editor view
+  if (isEditing) {
+    return (
+      <div>
+        <div className="flex items-center gap-3 mb-6">
+          <Button variant="ghost" size="sm" onClick={resetForm} className="gap-2">
+            <ArrowLeft className="w-4 h-4" /> Back to Lessons
+          </Button>
+          <h2 className="text-xl font-bold text-slate-800">
+            {editingLesson ? "Edit Lesson" : "Create New Lesson"}
+          </h2>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Top metadata row */}
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
+            <h3 className="text-sm font-semibold text-slate-700 mb-4">Lesson Details</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="md:col-span-2 lg:col-span-4">
+                <Label>Lesson Title *</Label>
+                <Input
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  required
+                  className="text-base"
+                  placeholder="Enter lesson title..."
+                />
+              </div>
+
+              <div>
+                <Label>Module *</Label>
+                <Select value={formData.module_id} onValueChange={(value) => setFormData({ ...formData, module_id: value })} required>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select module" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {modules.map((mod) => (
+                      <SelectItem key={mod.id} value={mod.id}>
+                        Module {mod.module_number}: {mod.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label>Lesson Number *</Label>
+                <Input
+                  type="number"
+                  value={formData.lesson_number}
+                  onChange={(e) => setFormData({ ...formData, lesson_number: parseInt(e.target.value) })}
+                  required
+                />
+              </div>
+
+              <div>
+                <Label>Content Type</Label>
+                <Select value={formData.content_type} onValueChange={(value) => setFormData({ ...formData, content_type: value })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="text">Text</SelectItem>
+                    <SelectItem value="video">Video</SelectItem>
+                    <SelectItem value="interactive">Interactive</SelectItem>
+                    <SelectItem value="reading">Reading</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label>Estimated Minutes</Label>
+                <Input
+                  type="number"
+                  value={formData.estimated_minutes}
+                  onChange={(e) => setFormData({ ...formData, estimated_minutes: parseInt(e.target.value) })}
+                />
+              </div>
+
+              {formData.content_type === "video" && (
+                <>
+                  <div className="md:col-span-2">
+                    <Label>Video URL</Label>
+                    <Input
+                      value={formData.video_url}
+                      onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
+                      placeholder="https://..."
+                    />
+                  </div>
+                  <div>
+                    <Label>Video Duration (minutes)</Label>
+                    <Input
+                      type="number"
+                      value={formData.video_duration_minutes}
+                      onChange={(e) => setFormData({ ...formData, video_duration_minutes: parseInt(e.target.value) })}
+                    />
+                  </div>
+                </>
+              )}
+
+              <div>
+                <Label>Status</Label>
+                <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="published">Published</SelectItem>
+                    <SelectItem value="draft">Draft</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
+          {/* Full-width content editor */}
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
+            <h3 className="text-sm font-semibold text-slate-700 mb-4">Lesson Content <span className="text-slate-400 font-normal">(Markdown supported)</span></h3>
+            <Textarea
+              value={formData.content_html}
+              onChange={(e) => setFormData({ ...formData, content_html: e.target.value })}
+              rows={28}
+              placeholder="# Lesson Title&#10;&#10;## Introduction&#10;&#10;Write your lesson content here using Markdown...&#10;&#10;## Key Concepts&#10;&#10;- Concept 1&#10;- Concept 2"
+              className="font-mono text-sm resize-y w-full min-h-[400px]"
+            />
+          </div>
+
+          {/* Skills */}
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
+            <h3 className="text-sm font-semibold text-slate-700 mb-4">Associated Skills</h3>
+            <div className="flex gap-2 mb-3">
+              <Input
+                placeholder="e.g., Wound Assessment, Dressing Selection"
+                value={skillInput}
+                onChange={(e) => setSkillInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
+              />
+              <Button type="button" onClick={addSkill} variant="outline">Add</Button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {formData.associated_skills.map((skill, i) => (
+                <Badge key={i} variant="outline" className="gap-1">
+                  {skill}
+                  <button type="button" onClick={() => removeSkill(skill)} className="ml-1 hover:text-red-600">×</button>
+                </Badge>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex gap-3 justify-end pb-8">
+            <Button type="button" variant="outline" onClick={resetForm}>Cancel</Button>
+            <Button type="submit" className="bg-teal-600 hover:bg-teal-700 px-8">
+              {editingLesson ? "Update Lesson" : "Create Lesson"}
+            </Button>
+          </div>
+        </form>
+      </div>
+    );
+  }
+
+  // List view
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -137,162 +294,9 @@ export default function LessonManager() {
           <h2 className="text-xl font-bold text-slate-800">Lesson Management</h2>
           <p className="text-sm text-slate-500 mt-1">Create and manage lesson content</p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-teal-600 hover:bg-teal-700 gap-2">
-              <Plus className="w-4 h-4" /> Add Lesson
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>{editingLesson ? "Edit Lesson" : "Create New Lesson"}</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2">
-                  <Label>Lesson Title *</Label>
-                  <Input
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div>
-                  <Label>Module *</Label>
-                  <Select value={formData.module_id} onValueChange={(value) => setFormData({ ...formData, module_id: value })} required>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select module" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {modules.map((mod) => (
-                        <SelectItem key={mod.id} value={mod.id}>
-                          Module {mod.module_number}: {mod.title}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label>Lesson Number *</Label>
-                  <Input
-                    type="number"
-                    value={formData.lesson_number}
-                    onChange={(e) => setFormData({ ...formData, lesson_number: parseInt(e.target.value) })}
-                    required
-                  />
-                </div>
-
-                <div>
-                  <Label>Content Type</Label>
-                  <Select value={formData.content_type} onValueChange={(value) => setFormData({ ...formData, content_type: value })}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="text">Text</SelectItem>
-                      <SelectItem value="video">Video</SelectItem>
-                      <SelectItem value="interactive">Interactive</SelectItem>
-                      <SelectItem value="reading">Reading</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label>Estimated Minutes</Label>
-                  <Input
-                    type="number"
-                    value={formData.estimated_minutes}
-                    onChange={(e) => setFormData({ ...formData, estimated_minutes: parseInt(e.target.value) })}
-                  />
-                </div>
-
-                {formData.content_type === "video" && (
-                  <>
-                    <div className="col-span-2">
-                      <Label>Video URL</Label>
-                      <Input
-                        value={formData.video_url}
-                        onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
-                        placeholder="https://..."
-                      />
-                    </div>
-                    <div>
-                      <Label>Video Duration (minutes)</Label>
-                      <Input
-                        type="number"
-                        value={formData.video_duration_minutes}
-                        onChange={(e) => setFormData({ ...formData, video_duration_minutes: parseInt(e.target.value) })}
-                      />
-                    </div>
-                  </>
-                )}
-
-                <div className="col-span-2">
-                  <Label>Content (Markdown supported)</Label>
-                  <Textarea
-                    value={formData.content_html}
-                    onChange={(e) => setFormData({ ...formData, content_html: e.target.value })}
-                    rows={10}
-                    placeholder="# Lesson Content&#10;&#10;Write your lesson content here using Markdown..."
-                  />
-                </div>
-
-                <div>
-                  <Label>Status</Label>
-                  <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="published">Published</SelectItem>
-                      <SelectItem value="draft">Draft</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="col-span-2">
-                  <Label>Associated Skills</Label>
-                  <div className="flex gap-2 mb-2">
-                    <Input
-                      placeholder="e.g., Wound Assessment, Dressing Selection"
-                      value={skillInput}
-                      onChange={(e) => setSkillInput(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
-                    />
-                    <Button type="button" onClick={addSkill} variant="outline">
-                      Add
-                    </Button>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {formData.associated_skills.map((skill, i) => (
-                      <Badge key={i} variant="outline" className="gap-1">
-                        {skill}
-                        <button
-                          type="button"
-                          onClick={() => removeSkill(skill)}
-                          className="ml-1 hover:text-red-600"
-                        >
-                          ×
-                        </button>
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex gap-2 justify-end pt-4">
-                <Button type="button" variant="outline" onClick={resetForm}>
-                  Cancel
-                </Button>
-                <Button type="submit" className="bg-teal-600 hover:bg-teal-700">
-                  {editingLesson ? "Update Lesson" : "Create Lesson"}
-                </Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <Button className="bg-teal-600 hover:bg-teal-700 gap-2" onClick={() => setIsEditing(true)}>
+          <Plus className="w-4 h-4" /> Add Lesson
+        </Button>
       </div>
 
       <div className="mb-4">
