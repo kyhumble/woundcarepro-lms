@@ -92,7 +92,7 @@ export default function LessonManager() {
       associated_skills: []
     });
     setEditingLesson(null);
-    setIsDialogOpen(false);
+    setIsEditing(false);
     setSkillInput("");
   };
 
@@ -110,7 +110,7 @@ export default function LessonManager() {
       status: lesson.status,
       associated_skills: lesson.associated_skills || []
     });
-    setIsDialogOpen(true);
+    setIsEditing(true);
   };
 
   const addSkill = () => {
