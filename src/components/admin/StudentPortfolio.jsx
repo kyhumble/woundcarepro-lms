@@ -59,6 +59,12 @@ export default function StudentPortfolio() {
     enabled: !!selectedUser,
   });
 
+  const { data: checklistSubmissions = [] } = useQuery({
+    queryKey: ["admin-portfolio-checklists", selectedUser],
+    queryFn: () => base44.entities.ChecklistSubmission.filter({ user_email: selectedUser }, "-created_date", 50),
+    enabled: !!selectedUser,
+  });
+
   const { data: gamification } = useQuery({
     queryKey: ["admin-portfolio-gamification", selectedUser],
     queryFn: async () => {
