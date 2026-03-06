@@ -51,7 +51,7 @@ export default function PortfolioView({
         {[
           { label: "Quizzes Passed", value: quizzesPassed.length, icon: Target, color: "text-teal-600", bg: "bg-teal-50" },
           { label: "Avg Quiz Score", value: `${avgScore}%`, icon: TrendingUp, color: "text-blue-600", bg: "bg-blue-50" },
-          { label: "Skills Acquired", value: skillMasteries.length, icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
+          { label: "Skills Verified", value: checklistsPassed.length, icon: ClipboardCheck, color: "text-amber-600", bg: "bg-amber-50" },
           { label: "Study Hours", value: totalHours, icon: Clock, color: "text-purple-600", bg: "bg-purple-50" },
         ].map((stat) => (
           <div key={stat.label} className={`${stat.bg} rounded-xl p-4`}>
@@ -63,6 +63,61 @@ export default function PortfolioView({
           </div>
         ))}
       </div>
+
+      {/* CEU / Certificate Readiness */}
+      <Card className={`border-2 ${ceuEligible ? "border-teal-300 bg-teal-50/30" : "border-slate-200"}`}>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <GraduationCap className={`w-4 h-4 ${ceuEligible ? "text-teal-600" : "text-slate-400"}`} />
+            CEU &amp; Certificate Readiness
+            {ceuEligible
+              ? <Badge className="bg-teal-100 text-teal-700 border-teal-300 ml-2">Eligible</Badge>
+              : <Badge variant="outline" className="ml-2 text-slate-500">Incomplete</Badge>}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+            {[
+              { label: "Quiz/Exam Passed", done: quizzesPassed.length > 0, detail: `${quizzesPassed.length} passed` },
+              { label: "Skills Checklist Completed", done: checklistsPassed.length > 0, detail: `${checklistsPassed.length} completed` },
+              { label: "Case Study Reviewed", done: reviewedCases.length > 0, detail: `${reviewedCases.length} reviewed` },
+            ].map((req) => (
+              <div key={req.label} className={`flex items-start gap-3 p-3 rounded-lg border ${req.done ? "bg-teal-50 border-teal-200" : "bg-slate-50 border-slate-200"}`}>
+                {req.done
+                  ? <CheckCircle2 className="w-5 h-5 text-teal-500 flex-shrink-0 mt-0.5" />
+                  : <Lock className="w-5 h-5 text-slate-300 flex-shrink-0 mt-0.5" />}
+                <div>
+                  <p className="text-xs font-semibold text-slate-700">{req.label}</p>
+                  <p className="text-[10px] text-slate-500 mt-0.5">{req.done ? req.detail : "Not yet completed"}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          {isAdmin && onIssueCertificate && (
+            <div className="flex items-center gap-3 pt-3 border-t border-slate-200">
+              {ceuEligible ? (
+                <Button onClick={() => onIssueCertificate(user)} className="bg-teal-600 hover:bg-teal-700 gap-2">
+                  <Award className="w-4 h-4" /> Issue Certificate / CEU
+                </Button>
+              ) : (
+                <p className="text-xs text-slate-400 flex items-center gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  Student must complete all three requirements before a certificate can be issued.
+                </p>
+              )}
+              {certificates.length > 0 && (
+                <span className="text-xs text-slate-500 ml-auto">{certificates.length} certificate(s) already issued</span>
+              )}
+            </div>
+          )}
+          {!isAdmin && !ceuEligible && (
+            <p className="text-xs text-slate-500 flex items-center gap-1.5 pt-3 border-t border-slate-200">
+              <AlertCircle className="w-3.5 h-3.5 text-amber-500" />
+              Complete a quiz, a skills checklist, and a reviewed case study to become eligible for a certificate.
+            </p>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Quizzes */}
       <Card className="border-slate-200/60">
