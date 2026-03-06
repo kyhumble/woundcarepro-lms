@@ -329,8 +329,13 @@ export default function ModuleDetail() {
                       <ReactMarkdown>{activeLesson.content_html || "Content coming soon..."}</ReactMarkdown>
                     </div>
 
-                    {/* Interactive Elements */}
-                    {activeLesson.inline_quiz && (
+                    {/* Embedded Quizzes (multi-question) */}
+                    {activeLesson.embedded_quizzes?.length > 0 && (
+                      <EmbeddedQuizPlayer quizzes={activeLesson.embedded_quizzes} />
+                    )}
+
+                    {/* Legacy single inline quiz */}
+                    {activeLesson.inline_quiz && !activeLesson.embedded_quizzes?.length && (
                       <InlineQuiz
                         question={activeLesson.inline_quiz.question}
                         options={activeLesson.inline_quiz.options}
