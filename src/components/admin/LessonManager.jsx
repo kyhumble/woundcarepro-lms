@@ -24,6 +24,9 @@ export default function LessonManager() {
     content_html: "",
     video_url: "",
     video_duration_minutes: 0,
+    presentation_url: "",
+    presentation_file_name: "",
+    embedded_quizzes: [],
     estimated_minutes: 0,
     status: "published",
     associated_skills: []
