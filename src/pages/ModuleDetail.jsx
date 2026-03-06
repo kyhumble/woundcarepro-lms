@@ -17,6 +17,8 @@ import VideoPlayer from "../components/lesson/VideoPlayer";
 import InlineQuiz from "../components/lesson/InlineQuiz";
 import FlashcardStack from "../components/lesson/FlashcardStack";
 import InteractiveDiagram from "../components/lesson/InteractiveDiagram";
+import PresentationPlayer from "../components/lesson/PresentationPlayer";
+import EmbeddedQuizPlayer from "../components/lesson/EmbeddedQuizPlayer";
 
 export default function ModuleDetail() {
   const params = new URLSearchParams(window.location.search);
