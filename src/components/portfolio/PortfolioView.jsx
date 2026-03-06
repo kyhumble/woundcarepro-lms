@@ -276,6 +276,66 @@ export default function PortfolioView({
         </CardContent>
       </Card>
 
+      {/* Skills Checklists */}
+      <Card className="border-slate-200/60">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <ClipboardCheck className="w-4 h-4 text-teal-600" />
+            Skills Checklists ({checklistSubmissions.length})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {checklistSubmissions.length > 0 ? (
+            <div className="space-y-2">
+              {checklistSubmissions.map((sub) => (
+                <div key={sub.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg gap-3">
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    {sub.status === "completed"
+                      ? <CheckCircle2 className="w-4 h-4 text-teal-500 flex-shrink-0" />
+                      : sub.status === "needs_improvement"
+                      ? <AlertCircle className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                      : <Clock className="w-4 h-4 text-slate-400 flex-shrink-0" />}
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-slate-700 truncate">
+                        {sub.checklist_title || "Skills Checklist"}
+                      </p>
+                      <p className="text-[10px] text-slate-400">
+                        {moment(sub.completed_at || sub.created_date).format("MMM D, YYYY")}
+                        {sub.evaluator_email ? ` · Evaluated by ${sub.evaluator_email}` : ""}
+                      </p>
+                      {sub.overall_comments && (
+                        <p className="text-xs text-slate-500 italic mt-1">"{sub.overall_comments}"</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <Badge className={
+                      sub.status === "completed" ? "bg-teal-50 text-teal-700 text-[10px]" :
+                      sub.status === "needs_improvement" ? "bg-amber-50 text-amber-700 text-[10px]" :
+                      sub.status === "in_progress" ? "bg-blue-50 text-blue-700 text-[10px]" :
+                      "bg-slate-100 text-slate-600 text-[10px]"
+                    }>
+                      {sub.status?.replace("_", " ")}
+                    </Badge>
+                    {isAdmin && onVerifyChecklist && sub.status !== "completed" && (
+                      <button
+                        onClick={() => onVerifyChecklist(sub)}
+                        className="p-1 rounded-md text-slate-400 hover:text-teal-600 hover:bg-teal-50 transition-colors"
+                        title="Mark as completed"
+                      >
+                        <CheckCircle2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-slate-400 text-center py-6">No checklist submissions yet</p>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Certificates & Achievements */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="border-slate-200/60">
