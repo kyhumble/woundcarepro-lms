@@ -112,6 +112,9 @@ export default function LessonManager() {
       content_html: lesson.content_html || "",
       video_url: lesson.video_url || "",
       video_duration_minutes: lesson.video_duration_minutes || 0,
+      presentation_url: lesson.presentation_url || "",
+      presentation_file_name: lesson.presentation_file_name || "",
+      embedded_quizzes: lesson.embedded_quizzes || [],
       estimated_minutes: lesson.estimated_minutes || 0,
       status: lesson.status,
       associated_skills: lesson.associated_skills || []
