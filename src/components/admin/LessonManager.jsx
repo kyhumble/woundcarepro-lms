@@ -100,7 +100,34 @@ export default function LessonManager() {
     setEditingLesson(null);
     setIsEditing(false);
     setSkillInput("");
-  };
+    setQuizDraft({ question: "", options: ["", "", "", ""], correct_answer: "", explanation: "" });
+    };
+
+    const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingFile(true);
+    try {
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    setFormData(prev => ({ ...prev, presentation_url: file_url, presentation_file_name: file.name }));
+    toast.success("File uploaded successfully!");
+    } catch (err) {
+    toast.error("Upload failed. Try again.");
+    } finally {
+    setUploadingFile(false);
+    }
+    };
+
+    const addQuizQuestion = () => {
+    if (!quizDraft.question || !quizDraft.correct_answer) return;
+    const newQ = { ...quizDraft, id: `q-${Date.now()}`, options: quizDraft.options.filter(o => o.trim()) };
+    setFormData(prev => ({ ...prev, embedded_quizzes: [...(prev.embedded_quizzes || []), newQ] }));
+    setQuizDraft({ question: "", options: ["", "", "", ""], correct_answer: "", explanation: "" });
+    };
+
+    const removeQuizQuestion = (id) => {
+    setFormData(prev => ({ ...prev, embedded_quizzes: prev.embedded_quizzes.filter(q => q.id !== id) }));
+    };
 
   const handleEdit = (lesson) => {
     setEditingLesson(lesson);
