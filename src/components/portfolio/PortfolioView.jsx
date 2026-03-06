@@ -2,9 +2,11 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import {
   Award, CheckCircle2, XCircle, BookOpen, Star, FileText,
-  Target, Trophy, Clock, TrendingUp, Shield, BadgeCheck
+  Target, Trophy, Clock, TrendingUp, Shield, BadgeCheck,
+  ClipboardCheck, AlertCircle, GraduationCap, Lock
 } from "lucide-react";
 import moment from "moment";
 
