@@ -52,6 +52,12 @@ export default function Portfolio() {
     enabled: !!user?.email,
   });
 
+  const { data: checklistSubmissions = [] } = useQuery({
+    queryKey: ["portfolio-checklists", user?.email],
+    queryFn: () => base44.entities.ChecklistSubmission.filter({ user_email: user.email }, "-created_date", 50),
+    enabled: !!user?.email,
+  });
+
   const { data: gamification } = useQuery({
     queryKey: ["portfolio-gamification", user?.email],
     queryFn: async () => {

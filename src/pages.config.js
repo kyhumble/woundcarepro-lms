@@ -62,6 +62,7 @@ import MockExamDetail from './pages/MockExamDetail';
 import MockExams from './pages/MockExams';
 import ModuleDetail from './pages/ModuleDetail';
 import Modules from './pages/Modules';
+import Portfolio from './pages/Portfolio';
 import Progress from './pages/Progress';
 import QuizPage from './pages/QuizPage';
 import ResourceDetail from './pages/ResourceDetail';
@@ -69,7 +70,6 @@ import ResourceLibrary from './pages/ResourceLibrary';
 import SkillMastery from './pages/SkillMastery';
 import SkillsChecklists from './pages/SkillsChecklists';
 import StudyPlanner from './pages/StudyPlanner';
-import Portfolio from './pages/Portfolio';
 import __Layout from './Layout.jsx';
 
 
@@ -89,6 +89,7 @@ export const PAGES = {
     "MockExams": MockExams,
     "ModuleDetail": ModuleDetail,
     "Modules": Modules,
+    "Portfolio": Portfolio,
     "Progress": Progress,
     "QuizPage": QuizPage,
     "ResourceDetail": ResourceDetail,
@@ -96,7 +97,6 @@ export const PAGES = {
     "SkillMastery": SkillMastery,
     "SkillsChecklists": SkillsChecklists,
     "StudyPlanner": StudyPlanner,
-    "Portfolio": Portfolio,
 }
 
 export const pagesConfig = {
