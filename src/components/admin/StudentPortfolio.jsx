@@ -203,6 +203,7 @@ export default function StudentPortfolio() {
           quizAttempts={quizAttempts}
           skillMasteries={skillMasteries}
           caseSubmissions={caseSubmissions}
+          checklistSubmissions={checklistSubmissions}
           certificates={certificates}
           achievements={achievements}
           progress={progress}
@@ -210,6 +211,8 @@ export default function StudentPortfolio() {
           isAdmin={true}
           onVerifySkill={(skill) => verifySkillMutation.mutate(skill)}
           onVerifyCaseStudy={(sub) => verifyCaseStudyMutation.mutate(sub)}
+          onVerifyChecklist={(sub) => verifyChecklistMutation.mutate(sub)}
+          onIssueCertificate={handleIssueCertificate}
         />
       ) : (
         <div className="text-center py-16 text-slate-400">
@@ -217,6 +220,60 @@ export default function StudentPortfolio() {
           <p className="text-sm">Select a student to view their portfolio</p>
         </div>
       )}
+
+      {/* Issue Certificate Dialog */}
+      <Dialog open={issueCertDialog} onOpenChange={setIssueCertDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Award className="w-5 h-5 text-amber-500" />
+              Issue Certificate to {selectedUserData?.full_name}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 mt-2">
+            <div>
+              <Label>Certificate Title *</Label>
+              <Input
+                value={certForm.title}
+                onChange={(e) => setCertForm({ ...certForm, title: e.target.value })}
+                placeholder="e.g., Wound Care Fundamentals Completion"
+              />
+            </div>
+            <div>
+              <Label>Certificate Type</Label>
+              <select
+                value={certForm.certificate_type}
+                onChange={(e) => setCertForm({ ...certForm, certificate_type: e.target.value })}
+                className="w-full border border-slate-200 rounded-md px-3 py-2 text-sm"
+              >
+                <option value="module_completion">Module Completion</option>
+                <option value="course_completion">Course Completion</option>
+                <option value="certification_ready">Certification Ready</option>
+              </select>
+            </div>
+            <div>
+              <Label>CE Contact Hours</Label>
+              <Input
+                type="number"
+                value={certForm.contact_hours}
+                onChange={(e) => setCertForm({ ...certForm, contact_hours: e.target.value })}
+                placeholder="e.g., 1.5"
+                step="0.5"
+              />
+            </div>
+            <div className="flex gap-2 justify-end pt-2">
+              <Button variant="outline" onClick={() => setIssueCertDialog(false)}>Cancel</Button>
+              <Button
+                className="bg-teal-600 hover:bg-teal-700 gap-2"
+                onClick={() => issueCertMutation.mutate()}
+                disabled={!certForm.title}
+              >
+                <Award className="w-4 h-4" /> Issue Certificate
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
