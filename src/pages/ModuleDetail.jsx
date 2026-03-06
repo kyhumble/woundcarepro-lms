@@ -282,6 +282,14 @@ export default function ModuleDetail() {
                 />
               )}
 
+              {/* Voiceover Presentation */}
+              {activeLesson.presentation_url && (
+                <PresentationPlayer
+                  url={activeLesson.presentation_url}
+                  fileName={activeLesson.presentation_file_name}
+                />
+              )}
+
               <div className="p-6 lg:p-8">
                 <div className="flex items-center justify-between mb-4 gap-4">
                   <div>
