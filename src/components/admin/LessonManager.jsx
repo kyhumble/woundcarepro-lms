@@ -30,6 +30,9 @@ export default function LessonManager() {
   });
 
   const [skillInput, setSkillInput] = useState("");
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const fileInputRef = useRef(null);
+  const [quizDraft, setQuizDraft] = useState({ question: "", options: ["", "", "", ""], correct_answer: "", explanation: "" });
 
   const { data: modules = [] } = useQuery({
     queryKey: ["modules"],
