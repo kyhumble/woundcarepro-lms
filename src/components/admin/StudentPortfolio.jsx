@@ -139,6 +139,11 @@ export default function StudentPortfolio() {
     toast.success("Portfolio exported!");
   };
 
+  const handleIssueCertificate = () => {
+    setCertForm({ title: "", contact_hours: "", certificate_type: "module_completion" });
+    setIssueCertDialog(true);
+  };
+
   const initials = selectedUserData?.full_name
     ? selectedUserData.full_name.split(" ").map(n => n[0]).join("").toUpperCase()
     : selectedUserData?.email?.[0]?.toUpperCase() || "?";
