@@ -15,6 +15,7 @@ export default function PortfolioView({
   quizAttempts = [], 
   skillMasteries = [], 
   caseSubmissions = [],
+  checklistSubmissions = [],
   certificates = [],
   achievements = [],
   progress = [],
@@ -22,12 +23,19 @@ export default function PortfolioView({
   isAdmin = false,
   onVerifySkill = null,
   onVerifyCaseStudy = null,
+  onVerifyChecklist = null,
+  onIssueCertificate = null,
 }) {
   const quizzesPassed = quizAttempts.filter(a => a.passed);
   const avgScore = quizAttempts.length > 0
     ? Math.round(quizAttempts.reduce((s, a) => s + (a.score || 0), 0) / quizAttempts.length)
     : 0;
   const totalHours = (progress.reduce((s, p) => s + (p.time_spent_minutes || 0), 0) / 60).toFixed(1);
+  const checklistsPassed = checklistSubmissions.filter(c => c.status === "completed");
+
+  // CEU eligibility: passed at least one quiz, at least one checklist completed, and at least one reviewed case
+  const reviewedCases = caseSubmissions.filter(s => s.status === "reviewed");
+  const ceuEligible = quizzesPassed.length > 0 && checklistsPassed.length > 0 && reviewedCases.length > 0;
 
   const masteryColors = {
     novice: "bg-slate-100 text-slate-700",
