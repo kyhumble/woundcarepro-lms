@@ -14,6 +14,8 @@ import { exportPortfolioPDF } from "../portfolio/portfolioPDFExport";
 
 export default function StudentPortfolio() {
   const [selectedUser, setSelectedUser] = useState("");
+  const [issueCertDialog, setIssueCertDialog] = useState(false);
+  const [certForm, setCertForm] = useState({ title: "", contact_hours: "", certificate_type: "module_completion" });
   const queryClient = useQueryClient();
 
   const { data: users = [] } = useQuery({
