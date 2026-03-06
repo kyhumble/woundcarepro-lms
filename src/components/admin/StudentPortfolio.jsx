@@ -94,6 +94,35 @@ export default function StudentPortfolio() {
     },
   });
 
+  const verifyChecklistMutation = useMutation({
+    mutationFn: (sub) => base44.entities.ChecklistSubmission.update(sub.id, {
+      status: "completed",
+      completed_at: new Date().toISOString(),
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-portfolio-checklists", selectedUser] });
+      toast.success("Checklist marked as completed!");
+    },
+  });
+
+  const issueCertMutation = useMutation({
+    mutationFn: () => base44.entities.Certificate.create({
+      user_email: selectedUser,
+      user_name: selectedUserData?.full_name || selectedUser,
+      certificate_type: certForm.certificate_type,
+      title: certForm.title,
+      contact_hours: parseFloat(certForm.contact_hours) || 0,
+      certificate_number: `HCA-${Date.now()}`,
+      issue_date: new Date().toISOString().split("T")[0],
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-portfolio-certs", selectedUser] });
+      toast.success("Certificate issued!");
+      setIssueCertDialog(false);
+      setCertForm({ title: "", contact_hours: "", certificate_type: "module_completion" });
+    },
+  });
+
   const selectedUserData = users.find(u => u.email === selectedUser);
 
   const handleExportPDF = () => {
