@@ -110,6 +110,7 @@ export default function Portfolio() {
           quizAttempts={quizAttempts}
           skillMasteries={skillMasteries}
           caseSubmissions={caseSubmissions}
+          checklistSubmissions={checklistSubmissions}
           certificates={certificates}
           achievements={achievements}
           progress={progress}
