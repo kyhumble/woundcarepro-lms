@@ -127,6 +127,7 @@ export default function ModuleDetail() {
     video: Play,
     interactive: Target,
     reading: BookOpen,
+    presentation: Presentation,
   };
 
   if (!module) {
