@@ -6,7 +6,7 @@ import { createPageUrl } from "../utils";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, BookOpen, Clock, Play, FileText, CheckCircle2,
-  Circle, ChevronRight, Award, Target, Download, ExternalLink
+  Circle, ChevronRight, Award, Target, Download, ExternalLink, Presentation
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
