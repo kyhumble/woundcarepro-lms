@@ -289,6 +289,125 @@ export default function LessonManager() {
             />
           </div>
 
+          {/* Voiceover Presentation Upload */}
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
+            <h3 className="text-sm font-semibold text-slate-700 mb-1">Voiceover Presentation</h3>
+            <p className="text-xs text-slate-400 mb-4">Upload a pre-recorded PPT, PDF, or MP4 video with voiceover. Supports PPTX, PDF, MP4, MOV, WEBM.</p>
+
+            {formData.presentation_url ? (
+              <div className="flex items-center gap-3 p-3 bg-teal-50 rounded-xl border border-teal-200">
+                <Presentation className="w-5 h-5 text-teal-600 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-teal-800 truncate">{formData.presentation_file_name || "Uploaded file"}</p>
+                  <a href={formData.presentation_url} target="_blank" rel="noopener noreferrer" className="text-xs text-teal-600 hover:underline">Preview file</a>
+                </div>
+                <Button type="button" variant="ghost" size="sm" className="text-red-500 h-7 px-2" onClick={() => setFormData(prev => ({ ...prev, presentation_url: "", presentation_file_name: "" }))}>
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            ) : (
+              <div>
+                <input ref={fileInputRef} type="file" accept=".pptx,.ppt,.pdf,.mp4,.mov,.webm,.m4v" className="hidden" onChange={handleFileUpload} />
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="gap-2 border-dashed border-2 w-full h-20 text-slate-500 hover:border-teal-400 hover:text-teal-600"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploadingFile}
+                >
+                  {uploadingFile ? (
+                    <span className="flex items-center gap-2"><Upload className="w-4 h-4 animate-bounce" /> Uploading...</span>
+                  ) : (
+                    <span className="flex flex-col items-center gap-1">
+                      <Upload className="w-5 h-5" />
+                      <span className="text-xs">Click to upload PPTX, PDF, or Video</span>
+                    </span>
+                  )}
+                </Button>
+                <p className="text-xs text-slate-400 mt-2">Or paste a direct URL:</p>
+                <Input
+                  value={formData.presentation_url}
+                  onChange={(e) => setFormData({ ...formData, presentation_url: e.target.value, presentation_file_name: formData.presentation_file_name || "Linked presentation" })}
+                  placeholder="https://..."
+                  className="mt-1"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Embedded Quiz Questions */}
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
+            <h3 className="text-sm font-semibold text-slate-700 mb-1">Embedded Quiz Questions</h3>
+            <p className="text-xs text-slate-400 mb-4">Add quiz questions students answer directly within this lesson.</p>
+
+            {/* Existing questions */}
+            {formData.embedded_quizzes?.length > 0 && (
+              <div className="space-y-2 mb-4">
+                {formData.embedded_quizzes.map((q, i) => (
+                  <div key={q.id} className="flex items-start gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                    <CheckCircle2 className="w-4 h-4 text-teal-500 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-slate-800">{i + 1}. {q.question}</p>
+                      <p className="text-xs text-teal-600 mt-0.5">✓ {q.correct_answer}</p>
+                    </div>
+                    <Button type="button" variant="ghost" size="sm" className="text-red-500 h-7 px-2 flex-shrink-0" onClick={() => removeQuizQuestion(q.id)}>
+                      <X className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Add new question form */}
+            <div className="border border-dashed border-slate-300 rounded-xl p-4 space-y-3">
+              <p className="text-xs font-semibold text-slate-600">Add a Question</p>
+              <div>
+                <Label className="text-xs">Question *</Label>
+                <Input
+                  value={quizDraft.question}
+                  onChange={e => setQuizDraft(prev => ({ ...prev, question: e.target.value }))}
+                  placeholder="e.g., What is the first step in wound assessment?"
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {quizDraft.options.map((opt, i) => (
+                  <div key={i}>
+                    <Label className="text-xs">Option {i + 1}</Label>
+                    <Input
+                      value={opt}
+                      onChange={e => {
+                        const newOpts = [...quizDraft.options];
+                        newOpts[i] = e.target.value;
+                        setQuizDraft(prev => ({ ...prev, options: newOpts }));
+                      }}
+                      placeholder={`Option ${i + 1}`}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div>
+                <Label className="text-xs">Correct Answer * (must match an option exactly)</Label>
+                <Input
+                  value={quizDraft.correct_answer}
+                  onChange={e => setQuizDraft(prev => ({ ...prev, correct_answer: e.target.value }))}
+                  placeholder="Paste or type the correct option"
+                />
+              </div>
+              <div>
+                <Label className="text-xs">Explanation (shown after answering)</Label>
+                <Textarea
+                  value={quizDraft.explanation}
+                  onChange={e => setQuizDraft(prev => ({ ...prev, explanation: e.target.value }))}
+                  placeholder="Explain why this is correct..."
+                  rows={2}
+                />
+              </div>
+              <Button type="button" onClick={addQuizQuestion} variant="outline" className="gap-2 text-teal-700 border-teal-300 hover:bg-teal-50" disabled={!quizDraft.question || !quizDraft.correct_answer}>
+                <Plus className="w-4 h-4" /> Add Question
+              </Button>
+            </div>
+          </div>
+
           {/* Skills */}
           <div className="bg-white rounded-xl border border-slate-200 p-6">
             <h3 className="text-sm font-semibold text-slate-700 mb-4">Associated Skills</h3>
