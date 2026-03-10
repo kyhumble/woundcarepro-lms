@@ -49,6 +49,10 @@
  */
 import AdminPanel from './pages/AdminPanel';
 import CaseStudies from './pages/CaseStudies';
+import Onboarding from './pages/Onboarding';
+import Pricing from './pages/Pricing';
+import Search from './pages/Search';
+import Settings from './pages/Settings';
 import CaseStudyDetail from './pages/CaseStudyDetail';
 import Certificates from './pages/Certificates';
 import ChecklistDetail from './pages/ChecklistDetail';
@@ -97,6 +101,10 @@ export const PAGES = {
     "SkillMastery": SkillMastery,
     "SkillsChecklists": SkillsChecklists,
     "StudyPlanner": StudyPlanner,
+    "Onboarding": Onboarding,
+    "Pricing": Pricing,
+    "Search": Search,
+    "Settings": Settings,
 }
 
 export const pagesConfig = {
