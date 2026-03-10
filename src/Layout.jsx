@@ -8,7 +8,8 @@ import {
   LayoutDashboard, BookOpen, Award, FileText, Library,
   MessageSquare, Settings, ChevronLeft, ChevronRight,
   Bell, LogOut, Menu, X, GraduationCap, ClipboardCheck,
-  BarChart3, User, Shield, Trophy, Calendar, CheckCheck
+  BarChart3, User, Shield, Trophy, Calendar, CheckCheck,
+  Search, CreditCard, Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -42,6 +43,7 @@ const NAV_ITEMS = [
   { label: "My Portfolio", icon: BarChart3, page: "Portfolio" },
   { label: "My Progress", icon: BarChart3, page: "Progress" },
   { label: "Certificates", icon: Award, page: "Certificates" },
+  { label: "Settings", icon: Settings, page: "Settings" },
 ];
 
 const ADMIN_ITEMS = [
@@ -246,6 +248,22 @@ export default function Layout({ children, currentPageName }) {
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Search Button */}
+            <Link
+              to={createPageUrl("Search")}
+              className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 text-sm transition-colors"
+            >
+              <Search className="w-4 h-4" />
+              <span className="text-xs">Search...</span>
+              <kbd className="hidden md:inline text-[10px] bg-white border border-slate-200 rounded px-1 py-0.5 text-slate-400">⌘K</kbd>
+            </Link>
+            <Link
+              to={createPageUrl("Search")}
+              className="sm:hidden p-2 rounded-lg hover:bg-slate-100 text-slate-500"
+            >
+              <Search className="w-5 h-5" />
+            </Link>
+
             <Popover open={notificationOpen} onOpenChange={setNotificationOpen}>
               <PopoverTrigger asChild>
                 <Button variant="ghost" size="icon" className="relative text-slate-500">
@@ -337,6 +355,22 @@ export default function Layout({ children, currentPageName }) {
                 <DropdownMenuItem asChild>
                   <Link to={createPageUrl("Certificates")} className="flex items-center gap-2">
                     <Award className="w-4 h-4" /> Certificates
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to={createPageUrl("Settings")} className="flex items-center gap-2">
+                    <Settings className="w-4 h-4" /> Settings
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to={createPageUrl("Search")} className="flex items-center gap-2">
+                    <Search className="w-4 h-4" /> Search
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to={createPageUrl("Pricing")} className="flex items-center gap-2">
+                    <CreditCard className="w-4 h-4" /> Pricing & Plans
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
