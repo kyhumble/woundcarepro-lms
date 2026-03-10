@@ -9,7 +9,7 @@ import {
   MessageSquare, Settings, ChevronLeft, ChevronRight,
   Bell, LogOut, Menu, X, GraduationCap, ClipboardCheck,
   BarChart3, User, Shield, Trophy, Calendar, CheckCheck,
-  Search, CreditCard, Sparkles
+  Search, CreditCard, Sparkles, Globe
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -48,6 +48,7 @@ const NAV_ITEMS = [
 
 const ADMIN_ITEMS = [
   { label: "Admin Panel", icon: Shield, page: "AdminPanel" },
+  { label: "Content Editor", icon: Globe, page: "ContentEditor" },
 ];
 
 export default function Layout({ children, currentPageName }) {

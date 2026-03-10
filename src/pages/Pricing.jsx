@@ -11,134 +11,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
-const PLANS = [
-  {
-    id: "starter",
-    name: "Starter",
-    price_monthly: 0,
-    price_annual: 0,
-    badge: null,
-    description: "Perfect for exploring the platform and beginning your wound care journey.",
-    color: "slate",
-    features: [
-      { text: "3 free modules", included: true },
-      { text: "Basic quizzes", included: true },
-      { text: "Community discussions", included: true },
-      { text: "Resource library (limited)", included: true },
-      { text: "Mock exams", included: false },
-      { text: "CE credit tracking", included: false },
-      { text: "Skills checklists", included: false },
-      { text: "Portfolio & certificates", included: false },
-      { text: "Case studies", included: false },
-      { text: "Priority support", included: false },
-    ],
-    cta: "Get Started Free",
-    ctaVariant: "outline",
-  },
-  {
-    id: "professional",
-    name: "Professional",
-    price_monthly: 79,
-    price_annual: 69,
-    badge: "Most Popular",
-    description: "Complete access for nurses and clinicians pursuing certification.",
-    color: "teal",
-    features: [
-      { text: "Unlimited modules & lessons", included: true },
-      { text: "All quizzes & assessments", included: true },
-      { text: "Community discussions", included: true },
-      { text: "Full resource library", included: true },
-      { text: "Mock exams (WOCN, ASCN, CWS)", included: true },
-      { text: "CE credit tracking & export", included: true },
-      { text: "Skills checklists & verification", included: true },
-      { text: "Portfolio & certificates", included: true },
-      { text: "Interactive case studies", included: true },
-      { text: "Priority support", included: false },
-    ],
-    cta: "Start 7-Day Free Trial",
-    ctaVariant: "default",
-  },
-  {
-    id: "enterprise",
-    name: "Enterprise",
-    price_monthly: null,
-    price_annual: null,
-    badge: "For Teams",
-    description: "Custom solutions for hospitals, health systems, and large clinical teams.",
-    color: "violet",
-    features: [
-      { text: "Everything in Professional", included: true },
-      { text: "Unlimited team seats", included: true },
-      { text: "Custom learning paths", included: true },
-      { text: "Admin dashboard & analytics", included: true },
-      { text: "Bulk CE credit reporting", included: true },
-      { text: "SSO / SAML integration", included: true },
-      { text: "Compliance reporting", included: true },
-      { text: "Dedicated success manager", included: true },
-      { text: "API access", included: true },
-      { text: "24/7 priority support", included: true },
-    ],
-    cta: "Contact Sales",
-    ctaVariant: "outline",
-  },
-];
-
-const TESTIMONIALS = [
-  {
-    name: "Jennifer L., RN",
-    role: "CWOCN",
-    org: "Cleveland Clinic",
-    text: "I passed my WOCN exam on the first attempt thanks to Healing Compass. The mock exams were incredibly similar to the real thing.",
-    rating: 5,
-  },
-  {
-    name: "Marcus T., NP",
-    role: "CWS Candidate",
-    org: "Kaiser Permanente",
-    text: "The adaptive exams are a game changer. They really pinpoint your weak areas and guide your study time effectively.",
-    rating: 5,
-  },
-  {
-    name: "Sandra M., RN BSN",
-    role: "Wound Care Coordinator",
-    org: "Johns Hopkins",
-    text: "Our entire wound care team uses Healing Compass for CE credits. The enterprise plan made it seamless to track everyone's progress.",
-    rating: 5,
-  },
-];
-
-const FAQS = [
-  {
-    q: "Is there a free trial?",
-    a: "Yes! The Professional plan includes a 7-day free trial — no credit card required. You'll get full access to all features including mock exams and CE tracking."
-  },
-  {
-    q: "Do CE credits count toward my certification renewal?",
-    a: "Our CE credits are designed to meet WOCN Society, ABWM, and other major nursing board requirements. Always verify with your specific certifying body for the most current requirements."
-  },
-  {
-    q: "Can I cancel anytime?",
-    a: "Absolutely. Cancel your subscription anytime from your account settings. You'll retain access until the end of your current billing period."
-  },
-  {
-    q: "Does the enterprise plan include onboarding support?",
-    a: "Yes. Enterprise customers receive a dedicated customer success manager, guided onboarding for your team, and training sessions to maximize adoption."
-  },
-  {
-    q: "Are mock exams updated regularly?",
-    a: "Yes. Our clinical content team updates question banks quarterly to reflect current evidence-based guidelines and certification exam blueprints."
-  },
-  {
-    q: "What if I need to pause my subscription?",
-    a: "You can pause your subscription for up to 3 months per year without losing your progress or certificates. Contact support to arrange a pause."
-  },
-];
+const FEATURE_GRID_ICONS = [BookOpen, GraduationCap, Award, BarChart3, Users, Shield, MessageSquare, Headphones];
 
 export default function Pricing() {
   const [user, setUser] = useState(null);
   const [annual, setAnnual] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
+  const { content } = useSiteContent();
+
+  const PLANS = content.pricing.plans;
+  const TESTIMONIALS = content.shared.testimonials;
+  const FAQS = content.pricing.faq;
+  const { hero: pricingHero, enterpriseCta, footerCta, featureGrid } = content.pricing;
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
@@ -146,7 +32,7 @@ export default function Pricing() {
 
   const handlePlanCTA = (plan) => {
     if (plan.id === "enterprise") {
-      window.location.href = "mailto:sales@healingcompassacademy.com?subject=Enterprise%20Inquiry";
+      window.location.href = `mailto:${content.shared.salesEmail}?subject=Enterprise%20Inquiry`;
     } else {
       base44.auth.redirectToLogin(createPageUrl("Dashboard"));
     }
@@ -184,12 +70,12 @@ export default function Pricing() {
       {/* Hero */}
       <section className="pt-16 pb-12 px-6 text-center bg-gradient-to-b from-slate-50 to-white">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          <Badge className="bg-teal-100 text-teal-700 border-teal-200 mb-4">Simple, Transparent Pricing</Badge>
+          <Badge className="bg-teal-100 text-teal-700 border-teal-200 mb-4">{pricingHero.badge}</Badge>
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4" style={{ fontFamily: "'DM Serif Display', serif" }}>
-            Invest in Your Clinical Career
+            {pricingHero.headline}
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-8">
-            Choose the plan that fits your learning goals. No hidden fees. Cancel anytime.
+            {pricingHero.subheadline}
           </p>
 
           {/* Billing Toggle */}
@@ -302,16 +188,7 @@ export default function Pricing() {
             Everything Included
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { icon: BookOpen, title: "25+ Expert Modules", desc: "Evidence-based wound care curriculum built by certified specialists" },
-              { icon: GraduationCap, title: "Adaptive Mock Exams", desc: "Intelligent question selection targets your weak areas automatically" },
-              { icon: Award, title: "CE Credits & Certificates", desc: "Earn and export recognized continuing education credits" },
-              { icon: BarChart3, title: "Progress Analytics", desc: "Detailed insights into your learning velocity and exam readiness" },
-              { icon: Users, title: "Community Forum", desc: "Connect with wound care professionals across the country" },
-              { icon: Shield, title: "Skills Checklists", desc: "Hands-on clinical verification checklists for competency validation" },
-              { icon: MessageSquare, title: "Case Studies", desc: "Realistic clinical scenarios to build decision-making confidence" },
-              { icon: Headphones, title: "Expert Support", desc: "Get help from certified wound care educators and platform experts" },
-            ].map((item, i) => (
+            {featureGrid.map((item, i) => ({...item, icon: FEATURE_GRID_ICONS[i] || BookOpen})).map((item, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 15 }}
@@ -374,10 +251,10 @@ export default function Pricing() {
         <div className="max-w-4xl mx-auto text-center">
           <Building2 className="w-14 h-14 text-teal-400 mx-auto mb-4" />
           <h2 className="text-3xl font-bold mb-3" style={{ fontFamily: "'DM Serif Display', serif" }}>
-            Managing a Clinical Team?
+            {enterpriseCta.heading}
           </h2>
           <p className="text-slate-300 text-lg mb-6 max-w-2xl mx-auto">
-            Healing Compass Enterprise gives nursing directors and educators a single platform to manage CE credits, competency verification, and certification prep for their entire team.
+            {enterpriseCta.subtext}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button className="bg-teal-500 hover:bg-teal-600 text-white px-8 py-6 text-base">
@@ -423,14 +300,14 @@ export default function Pricing() {
 
       {/* Footer CTA */}
       <section className="py-12 px-6 bg-teal-600 text-white text-center">
-        <h2 className="text-2xl font-bold mb-2">Ready to advance your wound care career?</h2>
-        <p className="text-teal-100 mb-6">Start your free 7-day trial. No credit card required.</p>
+        <h2 className="text-2xl font-bold mb-2">{footerCta.heading}</h2>
+        <p className="text-teal-100 mb-6">{footerCta.subtext}</p>
         <Button
           size="lg"
           className="bg-white text-teal-700 hover:bg-slate-100 px-8 py-6 text-lg"
           onClick={() => base44.auth.redirectToLogin(createPageUrl("Dashboard"))}
         >
-          Get Started Free <ArrowRight className="w-5 h-5 ml-2" />
+          {footerCta.ctaLabel} <ArrowRight className="w-5 h-5 ml-2" />
         </Button>
       </section>
 

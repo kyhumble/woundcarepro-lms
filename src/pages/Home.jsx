@@ -11,108 +11,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
-const FEATURES = [
-  {
-    icon: BookOpen,
-    title: "Structured Learning Paths",
-    description: "Curated certification pathways aligned with WOCN, ASCN, and CWS requirements. Progress at your own pace with expert-designed curriculum.",
-    color: "teal"
-  },
-  {
-    icon: Target,
-    title: "Adaptive Mock Exams",
-    description: "AI-powered question selection targets your weak areas. Practice with real exam simulations and detailed domain-by-domain analytics.",
-    color: "blue"
-  },
-  {
-    icon: Award,
-    title: "CE Credits & Certificates",
-    description: "Earn nationally recognized continuing education credits. Export your CE transcript and certificates directly from the platform.",
-    color: "amber"
-  },
-  {
-    icon: Shield,
-    title: "Skills Checklists",
-    description: "Validate clinical competencies with hands-on checklists reviewed and verified by certified wound care educators.",
-    color: "rose"
-  },
-  {
-    icon: BarChart3,
-    title: "Progress Analytics",
-    description: "Track your exam readiness with detailed performance insights. Know exactly where you stand before test day.",
-    color: "violet"
-  },
-  {
-    icon: MessageSquare,
-    title: "Community & Support",
-    description: "Connect with fellow wound care professionals, share case insights, and get answers from experts in our discussion forums.",
-    color: "green"
-  }
-];
-
-const TESTIMONIALS = [
-  {
-    name: "Jennifer L., RN",
-    role: "CWOCN",
-    org: "Cleveland Clinic",
-    text: "I passed my WOCN exam on the first attempt thanks to Healing Compass. The mock exams and case studies were incredibly realistic.",
-    rating: 5,
-    avatar: "JL"
-  },
-  {
-    name: "Marcus T., NP",
-    role: "CWS Certified",
-    org: "Kaiser Permanente",
-    text: "The adaptive exam feature is a game-changer. It pinpointed my weak areas in wound debridement and helped me focus my study time perfectly.",
-    rating: 5,
-    avatar: "MT"
-  },
-  {
-    name: "Sandra M., RN BSN",
-    role: "Wound Care Coordinator",
-    org: "Johns Hopkins",
-    text: "Our entire team uses Healing Compass for annual CE credits. The enterprise plan made it seamless to track everyone's compliance.",
-    rating: 5,
-    avatar: "SM"
-  },
-];
-
-const STATS = [
-  { label: "CE Hours Available", value: "100+", icon: Clock },
-  { label: "Expert Modules", value: "25+", icon: BookOpen },
-  { label: "Exam Pass Rate", value: "95%", icon: Target },
-  { label: "Active Learners", value: "1,000+", icon: Users },
-];
-
-const PLANS_PREVIEW = [
-  {
-    name: "Starter",
-    price: "Free",
-    features: ["3 modules", "Basic quizzes", "Community access"],
-    cta: "Get Started",
-    highlighted: false,
-  },
-  {
-    name: "Professional",
-    price: "$79/mo",
-    features: ["Unlimited modules", "Mock exams", "CE credits", "Portfolio & certs", "Case studies"],
-    cta: "Start Free Trial",
-    highlighted: true,
-    badge: "Most Popular",
-  },
-  {
-    name: "Enterprise",
-    price: "Custom",
-    features: ["Everything in Pro", "Team dashboard", "Compliance reporting", "Dedicated support"],
-    cta: "Contact Sales",
-    highlighted: false,
-  },
-];
+// Fixed icon mapping by feature slot (icons aren't stored in JSON)
+const FEATURE_ICONS = [BookOpen, Target, Award, Shield, BarChart3, MessageSquare];
+const STAT_ICONS = [Clock, BookOpen, Target, Users];
 
 export default function Home() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { content } = useSiteContent();
 
   useEffect(() => {
     base44.auth.me()
@@ -126,6 +34,12 @@ export default function Home() {
       window.location.href = createPageUrl("Dashboard");
     }
   }, [user]);
+
+  // Pull dynamic content (falls back to defaults if not yet saved)
+  const { hero, stats, features, howItWorks, testimonials: homeTestimonials, plansPreview: PLANS_PREVIEW, enterpriseBanner, finalCta } = content.home;
+  const TESTIMONIALS = content.shared.testimonials;
+  const FEATURES = features.map((f, i) => ({ ...f, icon: FEATURE_ICONS[i] || BookOpen }));
+  const STATS = stats.map((s, i) => ({ ...s, icon: STAT_ICONS[i] || Clock }));
 
   if (loading) {
     return (
@@ -185,15 +99,14 @@ export default function Home() {
               transition={{ duration: 0.7 }}
             >
               <Badge className="bg-teal-500/20 text-teal-300 border-teal-500/30 mb-5">
-                #1 Platform for Wound Care Certification
+                {hero.badge}
               </Badge>
               <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight" style={{ fontFamily: "'DM Serif Display', serif" }}>
-                Master Wound Care.
-                <span className="block text-teal-400 mt-1">Advance Your Career.</span>
+                {hero.headline1}
+                <span className="block text-teal-400 mt-1">{hero.headline2}</span>
               </h1>
               <p className="text-xl text-slate-300 mb-8 leading-relaxed">
-                Comprehensive certification preparation for WOCN, ASCN, and CWS.
-                Build clinical expertise with evidence-based learning paths and adaptive mock exams.
+                {hero.subheadline}
               </p>
               <div className="flex flex-col sm:flex-row items-start gap-3">
                 <Button
@@ -201,7 +114,7 @@ export default function Home() {
                   className="bg-teal-600 hover:bg-teal-500 text-white px-8 py-6 text-lg"
                   onClick={() => base44.auth.redirectToLogin(createPageUrl("Dashboard"))}
                 >
-                  Start Free — No Card Needed <ArrowRight className="ml-2 w-5 h-5" />
+                  {hero.primaryCta} <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
                 <Button
                   size="lg"
@@ -209,11 +122,11 @@ export default function Home() {
                   className="bg-white/10 border-white/20 text-white hover:bg-white/20 px-8 py-6 text-lg"
                   onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}
                 >
-                  <Play className="w-4 h-4 mr-2" /> See How It Works
+                  <Play className="w-4 h-4 mr-2" /> {hero.secondaryCta}
                 </Button>
               </div>
               <p className="text-slate-400 text-sm mt-4">
-                Join 1,000+ nurses and clinicians already advancing their wound care careers
+                {hero.socialProof}
               </p>
             </motion.div>
 
@@ -347,12 +260,7 @@ export default function Home() {
             </h2>
           </div>
           <div className="grid md:grid-cols-4 gap-6">
-            {[
-              { step: "01", title: "Create Account", desc: "Sign up and take a quick assessment to personalize your learning path.", icon: "🎯" },
-              { step: "02", title: "Follow Your Path", desc: "Complete expert-designed modules with videos, case studies, and quizzes.", icon: "📚" },
-              { step: "03", title: "Take Mock Exams", desc: "Practice with adaptive exams that simulate the real certification test.", icon: "📝" },
-              { step: "04", title: "Earn Credentials", desc: "Pass your exam, earn CE credits, and download your certificates.", icon: "🏆" },
-            ].map((item, i) => (
+            {howItWorks.map((item, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 15 }}
@@ -489,9 +397,9 @@ export default function Home() {
           <div className="bg-gradient-to-r from-slate-900 to-teal-900 rounded-3xl p-8 lg:p-12 flex flex-col lg:flex-row items-center justify-between gap-8">
             <div>
               <Building2 className="w-12 h-12 text-teal-400 mb-3" />
-              <h2 className="text-2xl font-bold text-white mb-2">Managing a clinical team?</h2>
+              <h2 className="text-2xl font-bold text-white mb-2">{enterpriseBanner.heading}</h2>
               <p className="text-slate-300 max-w-xl">
-                Healing Compass Enterprise gives nursing directors one platform for CE tracking, competency verification, and certification prep across their entire team.
+                {enterpriseBanner.subtext}
               </p>
             </div>
             <div className="flex flex-col gap-3 flex-shrink-0">
@@ -511,17 +419,17 @@ export default function Home() {
         <div className="max-w-3xl mx-auto text-center">
           <GraduationCap className="w-16 h-16 text-teal-200 mx-auto mb-4" />
           <h2 className="text-4xl font-bold text-white mb-3" style={{ fontFamily: "'DM Serif Display', serif" }}>
-            Ready to Begin Your Journey?
+            {finalCta.heading}
           </h2>
           <p className="text-xl text-teal-100 mb-8 max-w-xl mx-auto">
-            Join hundreds of wound care professionals who achieved certification with Healing Compass Academy.
+            {finalCta.subtext}
           </p>
           <Button
             size="lg"
             className="bg-white text-teal-700 hover:bg-slate-100 px-10 py-6 text-lg font-semibold"
             onClick={() => base44.auth.redirectToLogin(createPageUrl("Dashboard"))}
           >
-            Start Learning Today <ArrowRight className="ml-2 w-5 h-5" />
+            {finalCta.ctaLabel} <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
           <p className="text-teal-200 text-sm mt-3">Free forever plan available. No credit card required.</p>
         </div>

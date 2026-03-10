@@ -48,6 +48,7 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import AdminPanel from './pages/AdminPanel';
+import ContentEditor from './pages/ContentEditor';
 import CaseStudies from './pages/CaseStudies';
 import Onboarding from './pages/Onboarding';
 import Pricing from './pages/Pricing';
@@ -79,6 +80,7 @@ import __Layout from './Layout.jsx';
 
 export const PAGES = {
     "AdminPanel": AdminPanel,
+    "ContentEditor": ContentEditor,
     "CaseStudies": CaseStudies,
     "CaseStudyDetail": CaseStudyDetail,
     "Certificates": Certificates,
