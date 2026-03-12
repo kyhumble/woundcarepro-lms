@@ -172,24 +172,63 @@ export default function Layout({ children, currentPageName }) {
         </div>
 
         {/* Nav Items */}
-        <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
-          {navItems.map((item) => {
-            const isActive = currentPageName === item.page;
-            return (
-              <Link
-                key={item.page}
-                to={createPageUrl(item.page)}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-smooth ${
-                  isActive
-                    ? "bg-teal-500/15 text-teal-400"
-                    : "text-slate-400 hover:text-white hover:bg-slate-800"
-                }`}
-              >
-                <item.icon className={`w-5 h-5 flex-shrink-0 ${isActive ? "text-teal-400" : ""}`} />
-                {sidebarOpen && <span className="whitespace-nowrap">{item.label}</span>}
-              </Link>
-            );
-          })}
+        <nav className="flex-1 py-3 px-3 overflow-y-auto space-y-4">
+          {NAV_GROUPS.map((group) => (
+            <div key={group.label}>
+              {sidebarOpen && (
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-500 px-3 mb-1">
+                  {group.label}
+                </p>
+              )}
+              <div className="space-y-0.5">
+                {group.items.map((item) => {
+                  const isActive = currentPageName === item.page;
+                  return (
+                    <Link
+                      key={item.page}
+                      to={createPageUrl(item.page)}
+                      className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-smooth ${
+                        isActive
+                          ? "bg-teal-500/15 text-teal-400"
+                          : "text-slate-400 hover:text-white hover:bg-slate-800"
+                      }`}
+                    >
+                      <item.icon className={`w-4 h-4 flex-shrink-0 ${isActive ? "text-teal-400" : ""}`} />
+                      {sidebarOpen && <span className="whitespace-nowrap">{item.label}</span>}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+          {isAdmin && (
+            <div>
+              {sidebarOpen && (
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-500 px-3 mb-1">
+                  Admin
+                </p>
+              )}
+              <div className="space-y-0.5">
+                {ADMIN_ITEMS.map((item) => {
+                  const isActive = currentPageName === item.page;
+                  return (
+                    <Link
+                      key={item.page}
+                      to={createPageUrl(item.page)}
+                      className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-smooth ${
+                        isActive
+                          ? "bg-teal-500/15 text-teal-400"
+                          : "text-slate-400 hover:text-white hover:bg-slate-800"
+                      }`}
+                    >
+                      <item.icon className={`w-4 h-4 flex-shrink-0 ${isActive ? "text-teal-400" : ""}`} />
+                      {sidebarOpen && <span className="whitespace-nowrap">{item.label}</span>}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </nav>
 
         {/* Collapse Button */}
