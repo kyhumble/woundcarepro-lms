@@ -28,23 +28,44 @@ import {
 } from "@/components/ui/popover";
 import moment from "moment";
 
-const NAV_ITEMS = [
-  { label: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
-  { label: "Learning Paths", icon: BookOpen, page: "LearningPaths" },
-  { label: "Modules", icon: BookOpen, page: "Modules" },
-  { label: "Mock Exams", icon: GraduationCap, page: "MockExams" },
-  { label: "Study Planner", icon: Calendar, page: "StudyPlanner" },
-  { label: "Case Studies", icon: FileText, page: "CaseStudies" },
-  { label: "Skills Checklists", icon: ClipboardCheck, page: "SkillsChecklists" },
-  { label: "Resource Library", icon: Library, page: "ResourceLibrary" },
-  { label: "Discussions", icon: MessageSquare, page: "Discussions" },
-  { label: "Skill Mastery", icon: Trophy, page: "SkillMastery" },
-  { label: "Leaderboard", icon: Trophy, page: "Leaderboard" },
-  { label: "My Portfolio", icon: BarChart3, page: "Portfolio" },
-  { label: "My Progress", icon: BarChart3, page: "Progress" },
-  { label: "Certificates", icon: Award, page: "Certificates" },
-  { label: "Settings", icon: Settings, page: "Settings" },
+const NAV_GROUPS = [
+  {
+    label: "Overview",
+    items: [
+      { label: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
+    ],
+  },
+  {
+    label: "Learn",
+    items: [
+      { label: "Learning Paths", icon: BookOpen, page: "LearningPaths" },
+      { label: "Modules", icon: GraduationCap, page: "Modules" },
+      { label: "Mock Exams", icon: FileText, page: "MockExams" },
+      { label: "Study Planner", icon: Calendar, page: "StudyPlanner" },
+    ],
+  },
+  {
+    label: "Practice",
+    items: [
+      { label: "Case Studies", icon: FileText, page: "CaseStudies" },
+      { label: "Skills Checklists", icon: ClipboardCheck, page: "SkillsChecklists" },
+      { label: "Resource Library", icon: Library, page: "ResourceLibrary" },
+      { label: "Discussions", icon: MessageSquare, page: "Discussions" },
+    ],
+  },
+  {
+    label: "My Progress",
+    items: [
+      { label: "Skill Mastery", icon: Trophy, page: "SkillMastery" },
+      { label: "Leaderboard", icon: Trophy, page: "Leaderboard" },
+      { label: "My Portfolio", icon: BarChart3, page: "Portfolio" },
+      { label: "Progress", icon: BarChart3, page: "Progress" },
+      { label: "Certificates", icon: Award, page: "Certificates" },
+    ],
+  },
 ];
+
+const NAV_ITEMS = NAV_GROUPS.flatMap(g => g.items);
 
 const ADMIN_ITEMS = [
   { label: "Admin Panel", icon: Shield, page: "AdminPanel" },
