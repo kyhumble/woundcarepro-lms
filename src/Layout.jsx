@@ -264,25 +264,48 @@ export default function Layout({ children, currentPageName }) {
                 <X className="w-5 h-5 text-slate-400" />
               </button>
             </div>
-            <nav className="space-y-1">
-              {navItems.map((item) => {
-                const isActive = currentPageName === item.page;
-                return (
-                  <Link
-                    key={item.page}
-                    to={createPageUrl(item.page)}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-smooth ${
-                      isActive
-                        ? "bg-teal-500/15 text-teal-400"
-                        : "text-slate-400 hover:text-white hover:bg-slate-800"
-                    }`}
-                  >
-                    <item.icon className="w-5 h-5 flex-shrink-0" />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
+            <nav className="space-y-4 overflow-y-auto max-h-[calc(100vh-100px)]">
+              {NAV_GROUPS.map((group) => (
+                <div key={group.label}>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-500 px-3 mb-1">{group.label}</p>
+                  <div className="space-y-0.5">
+                    {group.items.map((item) => {
+                      const isActive = currentPageName === item.page;
+                      return (
+                        <Link
+                          key={item.page}
+                          to={createPageUrl(item.page)}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-smooth ${
+                            isActive ? "bg-teal-500/15 text-teal-400" : "text-slate-400 hover:text-white hover:bg-slate-800"
+                          }`}
+                        >
+                          <item.icon className="w-4 h-4 flex-shrink-0" />
+                          <span>{item.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+              {isAdmin && (
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-500 px-3 mb-1">Admin</p>
+                  {ADMIN_ITEMS.map((item) => {
+                    const isActive = currentPageName === item.page;
+                    return (
+                      <Link key={item.page} to={createPageUrl(item.page)} onClick={() => setMobileMenuOpen(false)}
+                        className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-smooth ${
+                          isActive ? "bg-teal-500/15 text-teal-400" : "text-slate-400 hover:text-white hover:bg-slate-800"
+                        }`}
+                      >
+                        <item.icon className="w-4 h-4 flex-shrink-0" />
+                        <span>{item.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
             </nav>
           </aside>
         </div>
