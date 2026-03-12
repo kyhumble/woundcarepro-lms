@@ -326,9 +326,7 @@ export default function ModuleDetail() {
                   </TabsList>
 
                   <TabsContent value="content">
-                    <div className="prose prose-slate max-w-none prose-headings:font-bold prose-p:text-slate-600 prose-p:leading-relaxed">
-                      <ReactMarkdown>{activeLesson.content_html || "Content coming soon..."}</ReactMarkdown>
-                    </div>
+                    <LessonContentRenderer content={activeLesson.content_html} />
 
                     {/* Embedded Quizzes (multi-question) */}
                     {activeLesson.embedded_quizzes?.length > 0 && (
