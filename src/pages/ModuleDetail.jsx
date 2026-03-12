@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ReactMarkdown from "react-markdown";
+import LessonContentRenderer from "../components/lesson/LessonContentRenderer";
 import VideoPlayer from "../components/lesson/VideoPlayer";
 import InlineQuiz from "../components/lesson/InlineQuiz";
 import FlashcardStack from "../components/lesson/FlashcardStack";
